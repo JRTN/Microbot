@@ -39,17 +39,16 @@ public class M1D1Script extends Script {
 
     @Override
     public boolean run() {
-        when(!Microbot.isLoggedIn())
-                .throwException("Player is not logged in");
+        when(!Microbot.isLoggedIn()).throwException("Player is not logged in");
 
-        when(!super.run())
-                .throwException("Script failed to initialize");
+        when(!super.run()).throwException("Script failed to initialize");
 
         Rs2Antiban.setActivity(Activity.GENERAL_MINING);
         Rs2Antiban.setPlayStyle(PlayStyle.EXTREME_AGGRESSIVE);
 
-        mainScheduledFuture = scheduledExecutorService
-                .scheduleWithFixedDelay(this::onLoop, 0, 75, TimeUnit.MILLISECONDS);
+        mainScheduledFuture =
+                scheduledExecutorService.scheduleWithFixedDelay(
+                        this::onLoop, 0, 75, TimeUnit.MILLISECONDS);
 
         return true;
     }
@@ -65,9 +64,7 @@ public class M1D1Script extends Script {
         when(inventory().count(IRON_ORE_ID) >= MAX_IRON_ORE_COUNT)
                 .then(inventory().dropAll(IRON_ORE_ID));
 
-        when(shouldMineRock())
-                .then(this::mineRock)
-                .onFailure(this::logMiningFailure);
+        when(shouldMineRock()).then(this::mineRock).onFailure(this::logMiningFailure);
     }
 
     // Condition methods
@@ -159,7 +156,7 @@ public class M1D1Script extends Script {
     }
 
     boolean selectAndHoverNextRock(TileObject currentRock) {
-        //Next action will be drop
+        // Next action will be drop
         if (Rs2Inventory.count("iron ore") == (MAX_IRON_ORE_COUNT - 1)) {
             Rs2Inventory.hover(Rs2Inventory.get("iron ore"));
 
@@ -168,7 +165,9 @@ public class M1D1Script extends Script {
         // Select the next rock and hover over it for the next iteration
         nextRockToMine = selectNextRock(currentRock);
         if (nextRockToMine != null) {
-            log.debug("Hovering over next rock at {} for next iteration", nextRockToMine.getWorldLocation());
+            log.debug(
+                    "Hovering over next rock at {} for next iteration",
+                    nextRockToMine.getWorldLocation());
             Rs2GameObject.hoverOverObject(nextRockToMine);
         }
         return true;

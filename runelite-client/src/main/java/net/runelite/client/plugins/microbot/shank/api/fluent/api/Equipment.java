@@ -18,7 +18,7 @@ public interface Equipment {
     List<Rs2ItemModel> getWorn(Predicate<Rs2ItemModel> predicate);
 
     Optional<Rs2ItemModel> getWearingInSlot(EquipmentInventorySlot slot);
-    boolean isWearingInSlot(Predicate<Rs2ItemModel> target);
-    boolean isWearingInSlot(int id);
-    boolean isWearingInSlot(String name);
+    boolean isWearingInSlot(Predicate<Rs2ItemModel> target, EquipmentInventorySlot slot);
+    boolean isWearingInSlot(int id, EquipmentInventorySlot slot);
+    boolean isWearingInSlot(String name, EquipmentInventorySlot slot);
 }

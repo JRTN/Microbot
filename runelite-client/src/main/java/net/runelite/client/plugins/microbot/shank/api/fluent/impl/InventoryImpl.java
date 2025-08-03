@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.microbot.shank.api.fluent.impl.action.inventory;
+package net.runelite.client.plugins.microbot.shank.api.fluent.impl;
 
 import net.runelite.api.ItemContainer;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.Inventory;
@@ -30,11 +30,13 @@ public class InventoryImpl implements Inventory {
         return items().filter(predicate);
     }
 
-    public List<Rs2ItemModel> getAllWorn() {
+    @Override
+    public List<Rs2ItemModel> getAllItems() {
         return items().collect(Collectors.toList());
     }
 
-    public List<Rs2ItemModel> getWorn(Predicate<Rs2ItemModel> predicate) {
+    @Override
+    public List<Rs2ItemModel> getItems(Predicate<Rs2ItemModel> predicate) {
         return items(predicate).collect(Collectors.toList());
     }
 
@@ -72,9 +74,7 @@ public class InventoryImpl implements Inventory {
     public Action dropUntilRemain(Predicate<Rs2ItemModel> target, int remaining) {
         return ActionChain.start(drop(target))
                 .repeatUntil(
-                        () -> count(target) <= remaining,
-                        TimingUtils.randomJitter(30, 12),
-                        30000);
+                        () -> count(target) <= remaining, TimingUtils.randomJitter(30, 12), 30000);
     }
 
     @Override
@@ -106,5 +106,4 @@ public class InventoryImpl implements Inventory {
     public Action dropAllExcept(String name) {
         return dropAll(model -> name.equals(model.getName()));
     }
-
 }

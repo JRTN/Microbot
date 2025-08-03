@@ -8,17 +8,20 @@ import java.util.function.LongSupplier;
 /**
  * Represents the result of executing an action, with support for chaining more actions.
  *
- * <p>ActionResult is returned when actions execute and provides methods for:</p>
+ * <p>ActionResult is returned when actions execute and provides methods for:
+ *
  * <ul>
- *   <li>Chaining additional actions with {@code then()}</li>
- *   <li>Adding wait conditions with {@code waitUntil()}</li>
- *   <li>Repeating until conditions with {@code repeatUntil()}</li>
- *   <li>Success/failure handling</li>
+ *   <li>Chaining additional actions with {@code then()}
+ *   <li>Adding wait conditions with {@code waitUntil()}
+ *   <li>Repeating until conditions with {@code repeatUntil()}
+ *   <li>Success/failure handling
  * </ul>
  *
  * <h2>Action Chaining</h2>
- * <p>Actions can be chained together in sequences where each action only executes
- * if the previous action succeeded:</p>
+ *
+ * <p>Actions can be chained together in sequences where each action only executes if the previous
+ * action succeeded:
+ *
  * <pre>{@code
  * when(needToBank())
  *     .then(bank().open())
@@ -29,8 +32,10 @@ import java.util.function.LongSupplier;
  * }</pre>
  *
  * <h2>Wait Operations</h2>
- * <p>Wait conditions can be inserted into action chains to pause execution
- * until specific conditions become true:</p>
+ *
+ * <p>Wait conditions can be inserted into action chains to pause execution until specific
+ * conditions become true:
+ *
  * <pre>{@code
  * when(needToFight())
  *     .then(combat().attack("Goblin"))
@@ -40,8 +45,10 @@ import java.util.function.LongSupplier;
  * }</pre>
  *
  * <h2>Repeat Operations</h2>
- * <p>Actions can be repeated until exit conditions are met, useful for
- * resource gathering or repetitive tasks:</p>
+ *
+ * <p>Actions can be repeated until exit conditions are met, useful for resource gathering or
+ * repetitive tasks:
+ *
  * <pre>{@code
  * when(canMine())
  *     .then(mining().clickRock("Iron ore"))
@@ -66,11 +73,11 @@ public class ActionResult {
     /**
      * Chains another action to execute if the previous action succeeded.
      *
-     * <p>The next action will only execute if all previous actions in the chain
-     * have succeeded. This implements fail-fast behavior where the first failure
-     * stops the entire chain.</p>
+     * <p>The next action will only execute if all previous actions in the chain have succeeded.
+     * This implements fail-fast behavior where the first failure stops the entire chain.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * when(needHealing())
      *     .then(inventory().open())           // Execute first
@@ -95,14 +102,14 @@ public class ActionResult {
     /**
      * Adds a wait condition to the action chain with default timeout and polling rate.
      *
-     * <p>Execution will pause until the condition becomes {@code true} or the default
-     * timeout (5 seconds) is reached. Uses a default polling rate of 100ms to check
-     * the condition repeatedly.</p>
+     * <p>Execution will pause until the condition becomes {@code true} or the default timeout (5
+     * seconds) is reached. Uses a default polling rate of 100ms to check the condition repeatedly.
      *
-     * <p>The wait will only execute if all previous actions in the chain succeeded.
-     * If any previous action failed, the wait is skipped and the chain remains failed.</p>
+     * <p>The wait will only execute if all previous actions in the chain succeeded. If any previous
+     * action failed, the wait is skipped and the chain remains failed.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * when(needToAttack())
      *     .then(combat().attack("Monster"))
@@ -121,15 +128,15 @@ public class ActionResult {
     /**
      * Adds a wait condition to the action chain with custom timeout and default polling rate.
      *
-     * <p>Execution will pause until the condition becomes {@code true} or the specified
-     * timeout is reached. Uses a default polling rate of 100ms to check the condition
-     * repeatedly.</p>
+     * <p>Execution will pause until the condition becomes {@code true} or the specified timeout is
+     * reached. Uses a default polling rate of 100ms to check the condition repeatedly.
      *
-     * <p>The wait will only execute if all previous actions in the chain succeeded.
-     * If the timeout is reached before the condition becomes true, the wait is
-     * considered failed and the entire chain fails.</p>
+     * <p>The wait will only execute if all previous actions in the chain succeeded. If the timeout
+     * is reached before the condition becomes true, the wait is considered failed and the entire
+     * chain fails.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * when(needToBank())
      *     .then(bank().open())
@@ -150,14 +157,15 @@ public class ActionResult {
     /**
      * Adds a wait condition to the action chain with custom timeout and polling rate.
      *
-     * <p>Execution will pause until the condition becomes {@code true} or the specified
-     * timeout is reached. The condition is checked at the specified polling interval.</p>
+     * <p>Execution will pause until the condition becomes {@code true} or the specified timeout is
+     * reached. The condition is checked at the specified polling interval.
      *
-     * <p>The wait will only execute if all previous actions in the chain succeeded.
-     * If the timeout is reached before the condition becomes true, the wait is
-     * considered failed and the entire chain fails.</p>
+     * <p>The wait will only execute if all previous actions in the chain succeeded. If the timeout
+     * is reached before the condition becomes true, the wait is considered failed and the entire
+     * chain fails.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * when(needToHeal())
      *     .then(inventory().eat("Shark"))
@@ -170,7 +178,8 @@ public class ActionResult {
      * @param timeoutMs Maximum time to wait in milliseconds. Must be positive.
      * @return A new ActionResult representing the outcome of the wait operation
      * @throws NullPointerException if {@code condition} is null
-     * @throws IllegalArgumentException if {@code pollingRateMs} or {@code timeoutMs} is not positive
+     * @throws IllegalArgumentException if {@code pollingRateMs} or {@code timeoutMs} is not
+     *     positive
      */
     public ActionResult waitUntil(BooleanSupplier condition, long pollingRateMs, long timeoutMs) {
         return waitUntil(condition, () -> pollingRateMs, timeoutMs);
@@ -180,13 +189,14 @@ public class ActionResult {
      * Adds a wait condition to the action chain with dynamic polling rate and custom timeout.
      *
      * <p>The polling rate supplier is called before each wait, allowing for dynamic timing
-     * strategies like exponential backoff or adaptive polling based on game state.</p>
+     * strategies like exponential backoff or adaptive polling based on game state.
      *
-     * <p>The wait will only execute if all previous actions in the chain succeeded.
-     * If the timeout is reached before the condition becomes true, the wait is
-     * considered failed and the entire chain fails.</p>
+     * <p>The wait will only execute if all previous actions in the chain succeeded. If the timeout
+     * is reached before the condition becomes true, the wait is considered failed and the entire
+     * chain fails.
      *
      * <h3>Example with exponential backoff</h3>
+     *
      * <pre>{@code
      * AtomicLong backoff = new AtomicLong(50);
      * when(needToConnect())
@@ -200,15 +210,18 @@ public class ActionResult {
      * }</pre>
      *
      * @param condition The condition to wait for. Must not be null.
-     * @param pollingRateSupplier Supplier that returns wait time between checks in milliseconds. Must not be null.
+     * @param pollingRateSupplier Supplier that returns wait time between checks in milliseconds.
+     *     Must not be null.
      * @param timeoutMs Maximum time to wait in milliseconds. Must be positive.
      * @return A new ActionResult representing the outcome of the wait operation
      * @throws NullPointerException if {@code condition} or {@code pollingRateSupplier} is null
      * @throws IllegalArgumentException if {@code timeoutMs} is not positive
      */
-    public ActionResult waitUntil(BooleanSupplier condition, LongSupplier pollingRateSupplier, long timeoutMs) {
+    public ActionResult waitUntil(
+            BooleanSupplier condition, LongSupplier pollingRateSupplier, long timeoutMs) {
         if (successful) {
-            boolean waitSuccessful = TimingUtils.waitUntil(condition, pollingRateSupplier, timeoutMs);
+            boolean waitSuccessful =
+                    TimingUtils.waitUntil(condition, pollingRateSupplier, timeoutMs);
             return new ActionResult(waitSuccessful, () -> waitSuccessful);
         } else {
             return new ActionResult(false, () -> false);
@@ -218,14 +231,15 @@ public class ActionResult {
     /**
      * Repeats the last action until a condition becomes true with dynamic polling rate.
      *
-     * <p>The last action in the chain will be executed repeatedly until the exit condition
-     * becomes {@code true} or the timeout is reached. The polling rate supplier is called
-     * before each wait, allowing for dynamic timing strategies.</p>
+     * <p>The last action in the chain will be executed repeatedly until the exit condition becomes
+     * {@code true} or the timeout is reached. The polling rate supplier is called before each wait,
+     * allowing for dynamic timing strategies.
      *
-     * <p>This method will only execute if all previous actions in the chain succeeded.
-     * If any previous action failed, this method returns {@code false} immediately.</p>
+     * <p>This method will only execute if all previous actions in the chain succeeded. If any
+     * previous action failed, this method returns {@code false} immediately.
      *
      * <h3>Example with exponential backoff</h3>
+     *
      * <pre>{@code
      * AtomicLong delay = new AtomicLong(100);
      * boolean success = when(canMine())
@@ -238,6 +252,7 @@ public class ActionResult {
      * }</pre>
      *
      * <h3>Example with adaptive polling</h3>
+     *
      * <pre>{@code
      * boolean success = when(needHealing())
      *     .then(inventory().eat("Shark"))
@@ -248,29 +263,34 @@ public class ActionResult {
      *     );
      * }</pre>
      *
-     * @param exitCondition Condition that stops the loop when it becomes {@code true}. Must not be null.
-     * @param pollingRateSupplier Supplier that returns the wait time in milliseconds for each iteration. Must not be null.
+     * @param exitCondition Condition that stops the loop when it becomes {@code true}. Must not be
+     *     null.
+     * @param pollingRateSupplier Supplier that returns the wait time in milliseconds for each
+     *     iteration. Must not be null.
      * @param timeoutMs Maximum time to repeat before giving up, in milliseconds. Must be positive.
-     * @return {@code true} if the exit condition was met, {@code false} if timeout, action failure, or previous chain failure
+     * @return {@code true} if the exit condition was met, {@code false} if timeout, action failure,
+     *     or previous chain failure
      * @throws NullPointerException if {@code exitCondition} or {@code pollingRateSupplier} is null
      * @throws IllegalArgumentException if {@code timeoutMs} is not positive
      */
-    public boolean repeatUntil(BooleanSupplier exitCondition, LongSupplier pollingRateSupplier, long timeoutMs) {
+    public boolean repeatUntil(
+            BooleanSupplier exitCondition, LongSupplier pollingRateSupplier, long timeoutMs) {
         if (!successful) return false;
-        return TimingUtils.repeatUntil(lastAction::execute, exitCondition, pollingRateSupplier, timeoutMs);
+        return TimingUtils.repeatUntil(
+                lastAction::execute, exitCondition, pollingRateSupplier, timeoutMs);
     }
 
     /**
      * Repeats the last action until a condition becomes true with fixed polling rate.
      *
-     * <p>The last action in the chain will be executed repeatedly until the exit condition
-     * becomes {@code true} or the timeout is reached. Uses a fixed polling rate between
-     * iterations.</p>
+     * <p>The last action in the chain will be executed repeatedly until the exit condition becomes
+     * {@code true} or the timeout is reached. Uses a fixed polling rate between iterations.
      *
-     * <p>This method will only execute if all previous actions in the chain succeeded.
-     * If any previous action failed, this method returns {@code false} immediately.</p>
+     * <p>This method will only execute if all previous actions in the chain succeeded. If any
+     * previous action failed, this method returns {@code false} immediately.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * boolean success = when(canFish())
      *     .then(fishing().clickSpot("Salmon"))
@@ -281,28 +301,32 @@ public class ActionResult {
      *     );
      * }</pre>
      *
-     * @param exitCondition Condition that stops the loop when it becomes {@code true}. Must not be null.
+     * @param exitCondition Condition that stops the loop when it becomes {@code true}. Must not be
+     *     null.
      * @param pollingRateMs Time to wait between iterations in milliseconds. Must be positive.
      * @param timeoutMs Maximum time to repeat before giving up, in milliseconds. Must be positive.
-     * @return {@code true} if the exit condition was met, {@code false} if timeout, action failure, or previous chain failure
+     * @return {@code true} if the exit condition was met, {@code false} if timeout, action failure,
+     *     or previous chain failure
      * @throws NullPointerException if {@code exitCondition} is null
-     * @throws IllegalArgumentException if {@code pollingRateMs} or {@code timeoutMs} is not positive
+     * @throws IllegalArgumentException if {@code pollingRateMs} or {@code timeoutMs} is not
+     *     positive
      */
     public boolean repeatUntil(BooleanSupplier exitCondition, long pollingRateMs, long timeoutMs) {
         return this.repeatUntil(exitCondition, () -> pollingRateMs, timeoutMs);
     }
 
     /**
-     * Repeats the last action until a condition becomes true with dynamic polling rate and default timeout.
+     * Repeats the last action until a condition becomes true with dynamic polling rate and default
+     * timeout.
      *
-     * <p>Uses a default timeout of 30 seconds. The polling rate supplier allows for
-     * dynamic timing strategies like exponential backoff or adaptive polling based
-     * on game state.</p>
+     * <p>Uses a default timeout of 30 seconds. The polling rate supplier allows for dynamic timing
+     * strategies like exponential backoff or adaptive polling based on game state.
      *
-     * <p>This method will only execute if all previous actions in the chain succeeded.
-     * If any previous action failed, this method returns {@code false} immediately.</p>
+     * <p>This method will only execute if all previous actions in the chain succeeded. If any
+     * previous action failed, this method returns {@code false} immediately.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * boolean success = when(canCraft())
      *     .then(crafting().makePotions())
@@ -312,9 +336,12 @@ public class ActionResult {
      *     );
      * }</pre>
      *
-     * @param exitCondition Condition that stops the loop when it becomes {@code true}. Must not be null.
-     * @param pollingRateSupplier Supplier that returns the wait time in milliseconds for each iteration. Must not be null.
-     * @return {@code true} if the exit condition was met, {@code false} if timeout, action failure, or previous chain failure
+     * @param exitCondition Condition that stops the loop when it becomes {@code true}. Must not be
+     *     null.
+     * @param pollingRateSupplier Supplier that returns the wait time in milliseconds for each
+     *     iteration. Must not be null.
+     * @return {@code true} if the exit condition was met, {@code false} if timeout, action failure,
+     *     or previous chain failure
      * @throws NullPointerException if {@code exitCondition} or {@code pollingRateSupplier} is null
      */
     public boolean repeatUntil(BooleanSupplier exitCondition, LongSupplier pollingRateSupplier) {
@@ -324,21 +351,24 @@ public class ActionResult {
     /**
      * Repeats the last action until a condition becomes true with default timeout and polling rate.
      *
-     * <p>Uses default values of 1 second polling rate and 30 second timeout. This is
-     * a convenience method for simple repetition scenarios.</p>
+     * <p>Uses default values of 1 second polling rate and 30 second timeout. This is a convenience
+     * method for simple repetition scenarios.
      *
-     * <p>This method will only execute if all previous actions in the chain succeeded.
-     * If any previous action failed, this method returns {@code false} immediately.</p>
+     * <p>This method will only execute if all previous actions in the chain succeeded. If any
+     * previous action failed, this method returns {@code false} immediately.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * boolean success = when(canChop())
      *     .then(woodcutting().clickTree("Oak"))
      *     .repeatUntil(() -> Rs2Inventory.isFull());  // Use defaults: 1s polling, 30s timeout
      * }</pre>
      *
-     * @param exitCondition Condition that stops the loop when it becomes {@code true}. Must not be null.
-     * @return {@code true} if the exit condition was met, {@code false} if timeout, action failure, or previous chain failure
+     * @param exitCondition Condition that stops the loop when it becomes {@code true}. Must not be
+     *     null.
+     * @return {@code true} if the exit condition was met, {@code false} if timeout, action failure,
+     *     or previous chain failure
      * @throws NullPointerException if {@code exitCondition} is null
      */
     public boolean repeatUntil(BooleanSupplier exitCondition) {
@@ -348,11 +378,12 @@ public class ActionResult {
     /**
      * Defines an action to execute if all previous actions in the chain succeeded.
      *
-     * <p>The success action executes immediately when this method is called, but only if
-     * the entire action chain up to this point has succeeded. If any action in the chain
-     * failed, the success action is ignored.</p>
+     * <p>The success action executes immediately when this method is called, but only if the entire
+     * action chain up to this point has succeeded. If any action in the chain failed, the success
+     * action is ignored.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * when(needToBank())
      *     .then(bank().open())
@@ -381,11 +412,12 @@ public class ActionResult {
     /**
      * Defines an action to execute if any action in the chain failed.
      *
-     * <p>The failure action executes immediately when this method is called, but only if
-     * any action in the chain up to this point has failed. If all actions succeeded,
-     * the failure action is ignored.</p>
+     * <p>The failure action executes immediately when this method is called, but only if any action
+     * in the chain up to this point has failed. If all actions succeeded, the failure action is
+     * ignored.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * when(needToCook())
      *     .then(cooking().useItemOn("Raw fish", "Fire"))
@@ -414,11 +446,12 @@ public class ActionResult {
     /**
      * Checks if all actions in the chain completed successfully.
      *
-     * <p>This method returns {@code true} when all actions that were executed
-     * in the chain returned {@code true}. If any action failed or returned
-     * {@code false}, this method returns {@code false}.</p>
+     * <p>This method returns {@code true} when all actions that were executed in the chain returned
+     * {@code true}. If any action failed or returned {@code false}, this method returns {@code
+     * false}.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * ActionResult result = when(canTrade())
      *     .then(trading().openTrade("Player123"))
@@ -440,11 +473,11 @@ public class ActionResult {
     /**
      * Checks if any action in the chain failed.
      *
-     * <p>This method returns {@code true} when any action that was executed
-     * in the chain returned {@code false}. If all actions succeeded, this
-     * method returns {@code false}.</p>
+     * <p>This method returns {@code true} when any action that was executed in the chain returned
+     * {@code false}. If all actions succeeded, this method returns {@code false}.
      *
      * <h3>Example</h3>
+     *
      * <pre>{@code
      * ActionResult result = when(needSupplies())
      *     .then(shop().open("General Store"))
