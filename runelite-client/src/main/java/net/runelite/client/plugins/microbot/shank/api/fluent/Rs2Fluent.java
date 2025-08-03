@@ -107,6 +107,17 @@ public interface Rs2Fluent {
         return new InventoryImpl();
     }
 
+    /**
+     * Creates a fluent interface for performing actions on the player's equipment.
+     *
+     * <p>This factory method returns an {@link Equipment} instance that provides access to all
+     * equipment-related operations in a fluent, chainable manner. The equipment interface allows
+     * querying equipment loadout contents and performing common operations like checking, equipping, and
+     * unequipping items.
+     *
+     * @return A new {@link Equipment} instance for fluent inventory operations
+     * @see Equipment
+     */
     static Equipment equipment() {
         return new EquipmentImpl();
     }

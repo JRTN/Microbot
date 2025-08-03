@@ -177,26 +177,6 @@ public class SituationResult {
     }
 
     /**
-     * Creates a new situation clause for chaining additional conditional logic.
-     *
-     * <p>This allows for sequential situation handling:
-     *
-     * <pre>{@code
-     * SituationResult banking = when(needToBank()).then(bankItems());
-     * SituationClause nextSituation = banking.when(readyToTrain());  // Returns clause, not result
-     * }</pre>
-     *
-     * <p>The new situation is independent of this result - it does not depend on whether this
-     * situation succeeded or failed.
-     *
-     * @param nextCondition The boolean condition for the next situation.
-     * @return A new {@link SituationClause} for the next conditional logic
-     */
-    public SituationClause when(boolean nextCondition) {
-        return new SituationClause(nextCondition);
-    }
-
-    /**
      * Continues the action chain with another action if this action succeeded.
      *
      * <p>This method allows chaining additional actions after success/failure handlers:

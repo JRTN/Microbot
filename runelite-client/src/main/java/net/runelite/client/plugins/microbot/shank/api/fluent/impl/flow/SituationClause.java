@@ -100,6 +100,112 @@ public class SituationClause {
     }
 
     /**
+     * Executes a complex action chain as a single unit if the condition is true, making the entire
+     * chain repeatable.
+     *
+     * <p><strong>This method is designed for multi-step operations that need to be repeated as a
+     * unit.</strong> Unlike {@link #then(Action)}, which returns an {@link ActionResult} for further
+     * chaining, {@code performAll()} treats the provided action chain as a complete, atomic operation
+     * that can be repeated in its entirety.
+     *
+     * <h2>Key Differences from {@code then()}</h2>
+     *
+     * <ul>
+     *   <li><strong>Returns {@link SituationResult}:</strong> Provides access to repeat operations
+     *       that work on the entire chain
+     *   <li><strong>Atomic repetition:</strong> {@code repeatUntil()} repeats the complete action
+     *       chain, not just the last action
+     *   <li><strong>Visual grouping:</strong> Clearly indicates that the action chain is a single
+     *       logical operation
+     * </ul>
+     *
+     * <h2>Perfect for Resource Gathering</h2>
+     *
+     * <p>This method excels at repetitive multi-step operations like mining, fishing, woodcutting, or
+     * any scenario where you need to repeat an entire sequence:
+     *
+     * <pre>{@code
+     * // Mining example - repeats entire sequence until inventory full
+     * when(canMine())
+     *     .performAll(
+     *         mining().walkToRock()
+     *             .then(mining().clickRock("Iron ore"))
+     *             .then(wait().until(() -> !Rs2Player.isAnimating()))
+     *             .then(mining().checkRockDepleted())
+     *     )
+     *     .repeatUntil(() -> Rs2Inventory.isFull(), 1000, 30000)
+     *     .onSuccess(log("Mining completed - inventory full"))
+     *     .onFailure(log("Mining failed or timed out"));
+     *
+     * // Fishing example - repeats entire fishing cycle
+     * when(canFish())
+     *     .performAll(
+     *         fishing().walkToSpot()
+     *             .then(fishing().clickSpot("Salmon"))
+     *             .then(wait().until(() -> Rs2Player.isAnimating()))
+     *             .then(wait().until(() -> !Rs2Player.isAnimating()))
+     *     )
+     *     .repeatUntil(() -> Rs2Inventory.isFull(), 2000, 300000);
+     * }</pre>
+     *
+     * <h2>Execution Model</h2>
+     *
+     * <p><strong>Immediate execution on first call:</strong>
+     *
+     * <ol>
+     *   <li>The stored condition value is checked
+     *   <li>If condition is {@code true}, the entire action chain executes once immediately
+     *   <li>A {@link SituationResult} is returned containing the outcome and the complete chain
+     *   <li>The chain can then be repeated using {@code repeatUntil()} methods
+     * </ol>
+     *
+     * <p>If the condition is {@code false}, the action chain is not executed, but the
+     * {@link SituationResult} still contains the chain for potential future operations.
+     *
+     * <h2>Comparison with {@code then()}</h2>
+     *
+     * <table border="1">
+     *   <tr><th>Aspect</th><th>{@code then()}</th><th>{@code performAll()}</th></tr>
+     *   <tr><td>Return Type</td><td>ActionResult</td><td>SituationResult</td></tr>
+     *   <tr><td>Repeat Behavior</td><td>Last action only</td><td>Entire chain</td></tr>
+     *   <tr><td>Use Case</td><td>Linear action chains</td><td>Repetitive multi-step operations</td></tr>
+     *   <tr><td>Visual Intent</td><td>Continuous flow</td><td>Grouped logical unit</td></tr>
+     * </table>
+     *
+     * <h3>Example: Banking Sequence</h3>
+     *
+     * <pre>{@code
+     * // Complex banking that might need to be repeated if it fails
+     * when(needToBank())
+     *     .performAll(
+     *         walker().webWalk(BANK_LOCATION)
+     *             .then(bank().open())
+     *             .waitUntil(() -> Rs2Bank.isOpen(), 5000)
+     *             .then(bank().depositAll("Fish"))
+     *             .then(bank().withdraw("Logs", 27))
+     *             .then(bank().close())
+     *     )
+     *     .onSuccess(log("Banking sequence completed"))
+     *     .onFailure(retryBanking());  // Could repeat the entire sequence
+     * }</pre>
+     *
+     * @param actionChain The complete action sequence to execute as a unit. This can be a single
+     *     action or a complex chain built with {@code .then()} calls. Must not be null.
+     * @return A {@link SituationResult} that can repeat the entire action chain and provides
+     *     success/failure handling for the complete operation
+     * @throws NullPointerException if {@code actionChain} is null
+     * @see #then(Action)
+     */
+    public SituationResult performAll(Action actionChain) {
+        if (condition) {
+            boolean successful = actionChain.execute();
+            return new SituationResult(successful, actionChain);
+        } else {
+            return new SituationResult(false, actionChain);
+        }
+    }
+
+    /**
      * Throws a RuntimeException if the condition is true, indicating a critical failure situation.
      *
      * <p>This method is useful for handling conditions that represent unrecoverable errors or
