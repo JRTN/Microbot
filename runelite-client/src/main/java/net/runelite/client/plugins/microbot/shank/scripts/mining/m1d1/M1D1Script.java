@@ -1,12 +1,14 @@
 package net.runelite.client.plugins.microbot.shank.scripts.mining.m1d1;
 
+import static net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent.*;
+
 import lombok.extern.slf4j.Slf4j;
+
 import net.runelite.api.GameObject;
 import net.runelite.api.Skill;
 import net.runelite.api.TileObject;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
-import net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent;
 import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
 import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 import net.runelite.client.plugins.microbot.util.antiban.enums.PlayStyle;
@@ -16,11 +18,10 @@ import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent.*;
+import javax.inject.Inject;
 
 @Slf4j
 public class M1D1Script extends Script {
