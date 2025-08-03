@@ -50,8 +50,6 @@ package net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow;
  */
 public class SituationResult {
     private final boolean condition;
-    private final Action action;
-    private final boolean conditionMet;
     private final boolean successful;
 
     /**
@@ -73,11 +71,7 @@ public class SituationResult {
      */
     public SituationResult(boolean condition, Action action) {
         this.condition = condition;
-        this.action = action;
-
-        // Execute immediately during construction
-        this.conditionMet = condition;
-        this.successful = conditionMet ? action.execute() : false;
+        this.successful = this.condition && action.execute();
     }
 
     /**
@@ -107,7 +101,7 @@ public class SituationResult {
      * @throws NullPointerException if {@code successAction} is null
      */
     public SituationResult onSuccess(Action successAction) {
-        if (successful && conditionMet) {
+        if (successful && condition) {
             successAction.execute();
         }
         return this;
@@ -132,7 +126,7 @@ public class SituationResult {
      * @throws NullPointerException if {@code failureAction} is null
      */
     public SituationResult onFailure(Action failureAction) {
-        if (conditionMet && !successful) {
+        if (condition && !successful) {
             failureAction.execute();
         }
         return this;
@@ -147,7 +141,7 @@ public class SituationResult {
      * @return {@code true} if the condition was false, {@code false} otherwise
      */
     public boolean didNotHappen() {
-        return !conditionMet;
+        return !condition;
     }
 
     /**
@@ -163,7 +157,7 @@ public class SituationResult {
      * @return {@code true} if the condition was met but action failed, {@code false} otherwise
      */
     public boolean failed() {
-        return conditionMet && !successful;
+        return condition && !successful;
     }
 
     /**
@@ -179,7 +173,7 @@ public class SituationResult {
      * @return {@code true} if both condition and action succeeded, {@code false} otherwise
      */
     public boolean succeeded() {
-        return conditionMet && successful;
+        return condition && successful;
     }
 
     /**
