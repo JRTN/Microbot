@@ -1,6 +1,6 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.impl;
 
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.Wait;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentSleep;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow.Action;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.util.TimingUtils;
 
@@ -8,7 +8,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
-public class WaitImpl implements Wait {
+public class FluentSleepImpl implements FluentSleep {
 
     @Override
     public Action forMilliseconds(LongSupplier millisecondsSupplier) {

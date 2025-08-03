@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public interface Equipment {
+public interface FluentEquipment {
     ItemContainer getContainer();
     Stream<Rs2ItemModel> items();
     Stream<Rs2ItemModel> items(Predicate<Rs2ItemModel> predicate);

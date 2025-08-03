@@ -6,7 +6,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
-public interface Wait {
+public interface FluentSleep {
     Action forMilliseconds(long milliseconds, long jitter);
     Action forMilliseconds(LongSupplier millisecondsSupplier);
     Action forMilliseconds(long milliseconds);

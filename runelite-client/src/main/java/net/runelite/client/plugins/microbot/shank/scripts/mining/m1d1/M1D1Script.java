@@ -4,6 +4,7 @@ import static net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent.*;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.GameObject;
 import net.runelite.api.Skill;
 import net.runelite.api.TileObject;
@@ -13,7 +14,6 @@ import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
 import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 import net.runelite.client.plugins.microbot.util.antiban.enums.PlayStyle;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
-import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
@@ -55,52 +55,33 @@ public class M1D1Script extends Script {
     }
 
     void onLoop() {
-        when(playerDoesNotHavePickaxe())
+        when(doesNotHavePickaxe())
                 .throwException("Player does not have pickaxe - cannot continue mining!");
 
-        when(canUseSpecialAttack())
+        when(Rs2Combat.getSpecEnergy() == 1000 && !Rs2Combat.getSpecState())
                 .then(this::activateSpecialAttack)
-                .waitUntil(this::hasSpecialEnergyDecreased, 500, 3000);
+                .waitUntil(() -> Rs2Combat.getSpecEnergy() < 1000, 500, 3000);
 
         when(inventory().count(IRON_ORE_ID) >= MAX_IRON_ORE_COUNT)
                 .then(inventory().dropAll(IRON_ORE_ID));
 
-        when(shouldMineRock()).then(this::mineRock).onFailure(this::logMiningFailure);
+        when(!Rs2Inventory.isFull() && !Rs2Player.isAnimating())
+                .then(this::mineRock)
+                .onFailure(this::logMiningFailure);
+    }
+
+    private static boolean doesNotHavePickaxe() {
+        return !equipment()
+                .isWearingInSlot(
+                        item ->
+                                item.getName().endsWith("pickaxe"), EquipmentInventorySlot.WEAPON)
+                && !inventory().getItems(item -> item.getName().endsWith("pickaxe")).isEmpty();
     }
 
     // Condition methods
-    boolean playerDoesNotHavePickaxe() {
-        return !Rs2Equipment.isWearing(item -> item.getName().endsWith("pickaxe"))
-                && !Rs2Inventory.hasItem("pickaxe", false);
-    }
-
-    boolean canUseSpecialAttack() {
-        return Rs2Combat.getSpecEnergy() == 1000 && !Rs2Combat.getSpecState();
-    }
-
-    boolean shouldDropIronOre() {
-        return Rs2Inventory.count("iron ore") >= MAX_IRON_ORE_COUNT;
-    }
-
-    boolean shouldMineRock() {
-        return !Rs2Inventory.isFull() && !Rs2Player.isAnimating();
-    }
-
-    boolean isPlayerAnimating() {
-        return Rs2Player.isAnimating();
-    }
-
     boolean hasReceivedXpDrop(int startXp) {
         int currentXp = Microbot.getClient().getSkillExperience(Skill.MINING);
         return currentXp > startXp;
-    }
-
-    boolean hasSpecialEnergyDecreased() {
-        return Rs2Combat.getSpecEnergy() < 1000;
-    }
-
-    boolean hasNoIronOre() {
-        return !Rs2Inventory.contains("iron ore");
     }
 
     List<GameObject> getAllAvailableRocks() {

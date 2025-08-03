@@ -73,7 +73,7 @@ import java.util.stream.Stream;
  * @see Action
  * @see Rs2ItemModel
  */
-public interface Inventory {
+public interface FluentInventory {
 
     /**
      * Gets the underlying RuneLite ItemContainer for direct access to inventory data.

@@ -1,7 +1,7 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.impl;
 
 import net.runelite.api.ItemContainer;
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.Inventory;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentInventory;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow.Action;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow.ActionChain;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.util.TimingUtils;
@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class InventoryImpl implements Inventory {
+public class FluentInventoryImpl implements FluentInventory {
 
     @Override
     public ItemContainer getContainer() {

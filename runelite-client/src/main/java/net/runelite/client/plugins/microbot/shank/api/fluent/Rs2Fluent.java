@@ -1,9 +1,13 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent;
 
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.Equipment;
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.Inventory;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.EquipmentImpl;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.InventoryImpl;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentAntiban;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentEquipment;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentInventory;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentSleep;
+import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentAntibanImpl;
+import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentEquipmentImpl;
+import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentInventoryImpl;
+import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentSleepImpl;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow.SituationClause;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow.SituationResult;
 
@@ -92,33 +96,41 @@ public interface Rs2Fluent {
         return new SituationClause(condition);
     }
 
-    /**
-     * Creates a fluent interface for performing actions on the player's inventory.
-     *
-     * <p>This factory method returns an {@link Inventory} instance that provides access to all
-     * inventory-related operations in a fluent, chainable manner. The inventory interface allows
-     * querying inventory contents and performing common operations like dropping, counting, and
-     * manipulating items.
-     *
-     * @return A new {@link Inventory} instance for fluent inventory operations
-     * @see Inventory
-     */
-    static Inventory inventory() {
-        return new InventoryImpl();
+    static FluentAntiban antiban() {
+        return new FluentAntibanImpl();
     }
 
     /**
      * Creates a fluent interface for performing actions on the player's equipment.
      *
-     * <p>This factory method returns an {@link Equipment} instance that provides access to all
+     * <p>This factory method returns an {@link FluentEquipment} instance that provides access to all
      * equipment-related operations in a fluent, chainable manner. The equipment interface allows
      * querying equipment loadout contents and performing common operations like checking, equipping, and
      * unequipping items.
      *
-     * @return A new {@link Equipment} instance for fluent inventory operations
-     * @see Equipment
+     * @return A new {@link FluentEquipment} instance for fluent inventory operations
+     * @see FluentEquipment
      */
-    static Equipment equipment() {
-        return new EquipmentImpl();
+    static FluentEquipment equipment() {
+        return new FluentEquipmentImpl();
+    }
+
+    /**
+     * Creates a fluent interface for performing actions on the player's inventory.
+     *
+     * <p>This factory method returns an {@link FluentInventory} instance that provides access to all
+     * inventory-related operations in a fluent, chainable manner. The inventory interface allows
+     * querying inventory contents and performing common operations like dropping, counting, and
+     * manipulating items.
+     *
+     * @return A new {@link FluentInventory} instance for fluent inventory operations
+     * @see FluentInventory
+     */
+    static FluentInventory inventory() {
+        return new FluentInventoryImpl();
+    }
+
+    static FluentSleep sleep() {
+        return new FluentSleepImpl();
     }
 }
