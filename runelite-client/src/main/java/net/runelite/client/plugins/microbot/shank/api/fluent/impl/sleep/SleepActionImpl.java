@@ -1,14 +1,16 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.impl.sleep;
 
+import com.google.common.annotations.Beta;
+
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.sleep.SleepAction;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
-import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.ActionChain;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.util.TimingUtils;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
+@Beta //This may be removed if it proves too complicated
 public class SleepActionImpl implements SleepAction {
 
     private final SleepType sleepType;
@@ -189,23 +191,5 @@ public class SleepActionImpl implements SleepAction {
     @Override
     public SleepAction whileDoing(Action concurrentAction, long actionRateMs) {
         return whileDoing(concurrentAction, () -> actionRateMs);
-    }
-
-    @Override
-    public SleepAction whileDoing(ActionChain concurrentActions) {
-        this.concurrentAction = concurrentActions;
-        return this;
-    }
-
-    @Override
-    public SleepAction whileDoing(ActionChain concurrentActions, LongSupplier actionRateSupplier) {
-        this.concurrentAction = concurrentActions;
-        this.actionRateSupplier = actionRateSupplier;
-        return this;
-    }
-
-    @Override
-    public SleepAction whileDoing(ActionChain concurrentActions, long actionRateMs) {
-        return whileDoing(concurrentActions, () -> actionRateMs);
     }
 }

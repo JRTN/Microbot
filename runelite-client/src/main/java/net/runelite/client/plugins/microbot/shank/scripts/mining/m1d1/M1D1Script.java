@@ -70,11 +70,23 @@ public class M1D1Script extends Script {
                 .onFailure(this::logMiningFailure);
     }
 
+    boolean mineRock() {
+        var startXp = Microbot.getClient().getSkillExperience(Skill.MINING);
+        var ironRock = getCurrentRockToMine();
+
+        return when(ironRock != null)
+                .then(() -> hoverOverRock(ironRock))
+                .then(() -> clickRockIfNotMining(ironRock))
+                .then(() -> selectAndHoverNextRock(ironRock))
+                .waitUntil(() -> hasReceivedXpDrop(startXp), 50, 2000)
+                .succeeded();
+    }
+
     private static boolean doesNotHavePickaxe() {
         return !equipment()
-                .isWearingInSlot(
-                        item ->
-                                item.getName().endsWith("pickaxe"), EquipmentInventorySlot.WEAPON)
+                        .isWearingInSlot(
+                                item -> item.getName().endsWith("pickaxe"),
+                                EquipmentInventorySlot.WEAPON)
                 && !inventory().getItems(item -> item.getName().endsWith("pickaxe")).isEmpty();
     }
 
@@ -165,18 +177,5 @@ public class M1D1Script extends Script {
         // Clear the next rock selection on failure to get a fresh selection
         nextRockToMine = null;
         return true;
-    }
-
-    // Complex action methods
-    boolean mineRock() {
-        var startXp = Microbot.getClient().getSkillExperience(Skill.MINING);
-        var ironRock = getCurrentRockToMine();
-
-        return when(ironRock != null)
-                .then(() -> hoverOverRock(ironRock))
-                .then(() -> clickRockIfNotMining(ironRock))
-                .then(() -> selectAndHoverNextRock(ironRock))
-                .waitUntil(() -> hasReceivedXpDrop(startXp), 50, 2000)
-                .succeeded();
     }
 }

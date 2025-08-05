@@ -10,9 +10,4 @@ public interface SleepAction extends Action {
     SleepAction whileDoing(Action concurrentAction);
     SleepAction whileDoing(Action concurrentAction, LongSupplier actionRateSupplier);
     SleepAction whileDoing(Action concurrentAction, long actionRateMs);
-
-    /** Execute an action chain repeatedly while waiting */
-    SleepAction whileDoing(ActionChain concurrentActions);
-    SleepAction whileDoing(ActionChain concurrentActions, LongSupplier actionRateSupplier);
-    SleepAction whileDoing(ActionChain concurrentActions, long actionRateMs);
 }
