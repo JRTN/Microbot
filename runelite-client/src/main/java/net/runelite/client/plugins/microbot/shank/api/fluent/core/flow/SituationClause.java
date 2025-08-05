@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow;
+package net.runelite.client.plugins.microbot.shank.api.fluent.core.flow;
 
 /**
  * Represents a conditional situation that can trigger actions when its condition is met.

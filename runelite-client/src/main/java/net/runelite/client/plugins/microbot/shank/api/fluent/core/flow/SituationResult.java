@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow;
+package net.runelite.client.plugins.microbot.shank.api.fluent.core.flow;
 
 /**
  * Represents the immutable result of an evaluated situation, with support for success/failure

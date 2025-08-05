@@ -1,7 +1,7 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.api;
 
 import net.runelite.api.ItemContainer;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow.Action;
+import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 
 import java.util.List;

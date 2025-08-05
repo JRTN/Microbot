@@ -2,9 +2,9 @@ package net.runelite.client.plugins.microbot.shank.api.fluent.impl;
 
 import net.runelite.api.ItemContainer;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentInventory;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow.Action;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow.ActionChain;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.util.TimingUtils;
+import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
+import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.ActionChain;
+import net.runelite.client.plugins.microbot.shank.api.fluent.core.util.TimingUtils;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 

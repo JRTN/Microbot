@@ -1,6 +1,6 @@
-package net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow;
+package net.runelite.client.plugins.microbot.shank.api.fluent.core.flow;
 
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.util.TimingUtils;
+import net.runelite.client.plugins.microbot.shank.api.fluent.core.util.TimingUtils;
 
 import java.util.ArrayList;
 import java.util.List;

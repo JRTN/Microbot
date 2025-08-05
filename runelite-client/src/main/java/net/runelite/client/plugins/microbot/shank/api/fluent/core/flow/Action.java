@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow;
+package net.runelite.client.plugins.microbot.shank.api.fluent.core.flow;
 
 /**
  * Base interface for all executable actions in the fluent API.

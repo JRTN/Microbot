@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.microbot.shank.api.fluent.impl.util;
+package net.runelite.client.plugins.microbot.shank.api.fluent.core.util;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;

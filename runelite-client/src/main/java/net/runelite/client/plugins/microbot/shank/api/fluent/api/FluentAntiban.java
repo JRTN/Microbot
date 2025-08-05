@@ -1,6 +1,6 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.api;
 
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.flow.Action;
+import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 import net.runelite.client.plugins.microbot.util.antiban.enums.ActivityIntensity;
 
