@@ -1,6 +1,6 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.impl.sleep;
 
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.sleep.FluentSleep;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.sleep.FluentTiming;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.sleep.SleepAction;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.util.TimingUtils;
 
@@ -8,25 +8,25 @@ import java.util.function.BooleanSupplier;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
-public class FluentSleepImpl implements FluentSleep {
+public class FluentTimingImpl implements FluentTiming {
 
     @Override
-    public SleepAction forMilliseconds(LongSupplier millisecondsSupplier) {
+    public SleepAction sleep(LongSupplier millisecondsSupplier) {
         return new SleepActionImpl(millisecondsSupplier);
     }
 
     @Override
-    public SleepAction forMilliseconds(long milliseconds, long jitter) {
-        return forMilliseconds(TimingUtils.randomJitter(milliseconds, jitter));
+    public SleepAction sleep(long milliseconds, long jitter) {
+        return sleep(TimingUtils.randomJitter(milliseconds, jitter));
     }
 
     @Override
-    public SleepAction forMilliseconds(long milliseconds) {
-        return forMilliseconds(() -> milliseconds);
+    public SleepAction sleep(long milliseconds) {
+        return sleep(() -> milliseconds);
     }
 
     @Override
-    public SleepAction waitUntil(
+    public SleepAction sleepUntil(
             BooleanSupplier condition, LongSupplier pollingRateSupplier, long timeoutMs) {
         return new SleepActionImpl(condition, pollingRateSupplier, timeoutMs);
     }

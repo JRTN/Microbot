@@ -3,11 +3,11 @@ package net.runelite.client.plugins.microbot.shank.api.fluent;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentAntiban;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentEquipment;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentInventory;
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.sleep.FluentSleep;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.sleep.FluentTiming;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentAntibanImpl;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentEquipmentImpl;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentInventoryImpl;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.sleep.FluentSleepImpl;
+import net.runelite.client.plugins.microbot.shank.api.fluent.impl.sleep.FluentTimingImpl;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.SituationClause;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.SituationResult;
 
@@ -130,7 +130,7 @@ public interface Rs2Fluent {
         return new FluentInventoryImpl();
     }
 
-    static FluentSleep sleep() {
-        return new FluentSleepImpl();
+    static FluentTiming timing() {
+        return new FluentTimingImpl();
     }
 }

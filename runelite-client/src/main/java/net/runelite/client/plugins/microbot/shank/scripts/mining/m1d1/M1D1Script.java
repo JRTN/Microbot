@@ -9,24 +9,21 @@ import net.runelite.api.GameObject;
 import net.runelite.api.Skill;
 import net.runelite.api.TileObject;
 import net.runelite.client.plugins.microbot.Microbot;
-import net.runelite.client.plugins.microbot.Script;
-import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
-import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
-import net.runelite.client.plugins.microbot.util.antiban.enums.PlayStyle;
+import net.runelite.client.plugins.microbot.shank.api.fluent.AbstractFluentScript;
+import net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.player.Rs2Player;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 @Slf4j
-public class M1D1Script extends Script {
+public class M1D1Script extends AbstractFluentScript {
     private final M1D1Config config;
-    private static final int IRON_ORE_ID = -1;
+    private static final int IRON_ORE_ID = 440;
     private static final int IRON_ORE_ROCK_ID = 11364;
     private static final int MAX_IRON_ORE_COUNT = 3;
 
@@ -39,22 +36,7 @@ public class M1D1Script extends Script {
     }
 
     @Override
-    public boolean run() {
-        when(!Microbot.isLoggedIn()).throwException("Player is not logged in");
-
-        when(!super.run()).throwException("Script failed to initialize");
-
-        Rs2Antiban.setActivity(Activity.GENERAL_MINING);
-        Rs2Antiban.setPlayStyle(PlayStyle.EXTREME_AGGRESSIVE);
-
-        mainScheduledFuture =
-                scheduledExecutorService.scheduleWithFixedDelay(
-                        this::onLoop, 0, 75, TimeUnit.MILLISECONDS);
-
-        return true;
-    }
-
-    void onLoop() {
+    protected void onLoop() {
         when(doesNotHavePickaxe())
                 .throwException("Player does not have pickaxe - cannot continue mining!");
 
@@ -63,11 +45,19 @@ public class M1D1Script extends Script {
                 .waitUntil(() -> Rs2Combat.getSpecEnergy() < 1000, 500, 3000);
 
         when(inventory().count(IRON_ORE_ID) >= MAX_IRON_ORE_COUNT)
-                .then(inventory().dropAll(IRON_ORE_ID));
+                .then(inventory().dropAll(IRON_ORE_ID))
+                .waitUntil(() -> inventory().count(IRON_ORE_ID) < 1, () -> 75, 5000)
+                //.then(timing().sleepUntil(() -> inventory().count(IRON_ORE_ID) < 1, () -> 75, 5000))
+                .then(antiban().actionCooldown());
 
         when(!Rs2Inventory.isFull() && !Rs2Player.isAnimating())
                 .then(this::mineRock)
                 .onFailure(this::logMiningFailure);
+    }
+
+    @Override
+    protected long pollingRate() {
+        return 75;
     }
 
     boolean mineRock() {

@@ -71,30 +71,6 @@ public class FluentAntibanImpl implements FluentAntiban {
     }
 
     @Override
-    public Action setActivity(Activity activity) {
-        return () -> {
-            try {
-                Rs2Antiban.setActivity(activity);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-        };
-    }
-
-    @Override
-    public Action setActivityIntensity(ActivityIntensity intensity) {
-        return () -> {
-            try {
-                Rs2Antiban.setActivityIntensity(intensity);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-        };
-    }
-
-    @Override
     public boolean isActive() {
         return Rs2AntibanSettings.antibanEnabled;
     }
@@ -110,16 +86,9 @@ public class FluentAntibanImpl implements FluentAntiban {
     }
 
     @Override
-    public Action configure(Consumer<Config> configurer) {
-        return () -> {
-            try {
-                FluentAntiban.Config config = new ConfigImpl();
-                configurer.accept(config);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-        };
+    public void configure(Consumer<Config> configurer) {
+        FluentAntiban.Config config = new ConfigImpl();
+        configurer.accept(config);
     }
 
     private static class ConfigImpl implements FluentAntiban.Config {
@@ -241,6 +210,16 @@ public class FluentAntibanImpl implements FluentAntiban {
         @Override
         public void disableMicroBreaks() {
             Rs2AntibanSettings.takeMicroBreaks = false;
+        }
+
+        @Override
+        public void setActivity(Activity activity) {
+            Rs2Antiban.setActivity(activity);
+        }
+
+        @Override
+        public void setActivityIntensity(ActivityIntensity intensity) {
+            Rs2Antiban.setActivityIntensity(intensity);
         }
 
         @Override

@@ -24,12 +24,6 @@ public interface FluentAntiban {
     /** Creates an action that moves the mouse to a random position on screen. */
     Action moveMouseRandomly();
 
-    /** Creates an action that sets the current anti-ban activity. */
-    Action setActivity(Activity activity);
-
-    /** Creates an action that sets the activity intensity level. */
-    Action setActivityIntensity(ActivityIntensity intensity);
-
     /** Checks if the anti-ban system is currently active. */
     boolean isActive();
 
@@ -39,7 +33,7 @@ public interface FluentAntiban {
     /** Checks if a micro-break is currently active. */
     boolean isMicroBreakActive();
 
-    Action configure(Consumer<Config> configurer);
+    void configure(Consumer<Config> configurer);
 
 
     interface Config {
@@ -68,6 +62,8 @@ public interface FluentAntiban {
         void enableMicroBreaks();
         void disableMicroBreaks();
 
+        void setActivity(Activity activity);
+        void setActivityIntensity(ActivityIntensity intensity);
         void setMicroBreakChance(double chance);
         void setActionCooldownChance(double chance);
         void setMouseRandomChance(double chance);
