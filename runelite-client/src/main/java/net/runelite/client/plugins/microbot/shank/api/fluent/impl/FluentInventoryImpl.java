@@ -11,7 +11,9 @@ import net.runelite.client.plugins.microbot.shank.api.fluent.core.util.TimingUti
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,7 +36,7 @@ public class FluentInventoryImpl implements FluentInventory {
     }
 
     @Override
-    public List<Rs2ItemModel> getAllItems() {
+    public List<Rs2ItemModel> getItems() {
         return items().collect(Collectors.toList());
     }
 
@@ -44,33 +46,65 @@ public class FluentInventoryImpl implements FluentInventory {
     }
 
     @Override
-    public int count(Predicate<Rs2ItemModel> target) {
+    public List<Rs2ItemModel> getItems(int... id) {
+        return getItems(
+                item -> Arrays.stream(id)
+                        .boxed()
+                        .collect(Collectors.toSet())
+                        .contains(item.getId()));
+    }
+
+    @Override
+    public List<Rs2ItemModel> getItems(String... names) {
+        return getItems(
+                item -> Arrays.stream(names)
+                        .collect(Collectors.toSet())
+                        .contains(item.getName()));
+    }
+
+    @Override
+    public Optional<Rs2ItemModel> getItem(Predicate<Rs2ItemModel> item) {
+        return items(item).findAny();
+    }
+
+    @Override
+    public Optional<Rs2ItemModel> getItem(int id) {
+        return getItem(item -> item.getId() == id);
+    }
+
+    @Override
+    public Optional<Rs2ItemModel> getItem(String name) {
+        return getItem(item -> name.equals(item.getName()));
+    }
+
+    @Override
+    public int countItems(Predicate<Rs2ItemModel> target) {
         return Rs2Inventory.count(target);
     }
 
     @Override
-    public int count(int id) {
-        return count(model -> model.getId() == id);
+    public int countItems(int id) {
+        return countItems(model -> model.getId() == id);
     }
 
     @Override
-    public int count(String name) {
-        return count(model -> name.equals(model.getName()));
+    public int countItems(String name) {
+        return countItems(model -> name.equals(model.getName()));
     }
 
     @Override
-    public boolean contains(Predicate<Rs2ItemModel> predicate) {
-        return count(predicate) > 0;
+    public boolean containsItem(Predicate<Rs2ItemModel> predicate) {
+        return countItems(predicate) > 0;
     }
 
     @Override
-    public boolean contains(int id) {
-        return count(id) > 0;
+    public boolean containsItem(int id) {
+        return countItems(id) > 0;
     }
 
     @Override
-    public boolean contains(String name) {
-        return count(name) > 0;
+    public boolean containsItem(String name) {
+        return countItems(name) > 0;
     }
 
     @Override
@@ -85,7 +119,7 @@ public class FluentInventoryImpl implements FluentInventory {
 
     @Override
     public boolean hasSpace(int amount) {
-        return true;
+        return getItems().size() < 28;
     }
 
     @Override
@@ -127,7 +161,7 @@ public class FluentInventoryImpl implements FluentInventory {
     public Action dropUntilRemain(Predicate<Rs2ItemModel> target, int remaining) {
         return ActionChain.start(drop(target))
                 .repeatUntil(
-                        () -> count(target) <= remaining, TimingUtils.randomJitter(30, 12), 30000);
+                        () -> countItems(target) <= remaining, TimingUtils.randomJitter(30, 12), 30000);
     }
 
     @Override

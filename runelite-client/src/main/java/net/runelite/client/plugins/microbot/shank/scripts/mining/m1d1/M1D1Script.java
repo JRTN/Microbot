@@ -46,10 +46,10 @@ public class M1D1Script extends AbstractFluentScript {
                 .then(combat().specialAttack().use())
                 .waitUntil(combat().specialAttack()::isLow);
 
-        when(inventory().count(ironOre) >= dropOreThreshold)
+        when(inventory().countItems(ironOre) >= dropOreThreshold)
                 .then(inventory().dropAll(ironOre))
                 .then(timing()
-                        .sleepUntil(() -> !inventory().contains(ironOre), this::pollingRate, 5000)
+                        .sleepUntil(() -> !inventory().containsItem(ironOre), this::pollingRate, 5000)
                         .whileDoing(antiban().moveMouseOffScreen()))
                 .then(antiban().actionCooldown());
 
