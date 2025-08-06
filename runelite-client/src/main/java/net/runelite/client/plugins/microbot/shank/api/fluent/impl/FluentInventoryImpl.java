@@ -182,7 +182,7 @@ public class FluentInventoryImpl implements FluentInventory {
     }
 
     @Override
-    public Action useOnGameObject(int item, int obj) {
-        return useOnGameObject(target -> target.getId() == item, target -> target.getId() == obj);
+    public Action useOnGameObject(int itemId, int objId) {
+        return useOnGameObject(item -> item.getId() == itemId, obj -> obj.getId() == objId);
     }
 }
