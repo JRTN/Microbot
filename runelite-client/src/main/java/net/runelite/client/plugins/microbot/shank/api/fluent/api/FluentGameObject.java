@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.microbot.shank.api.fluent.api.gameobject;
+package net.runelite.client.plugins.microbot.shank.api.fluent.api;
 
 import net.runelite.api.GameObject;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;

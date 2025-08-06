@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.impl;
 
+import net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentAntiban;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
