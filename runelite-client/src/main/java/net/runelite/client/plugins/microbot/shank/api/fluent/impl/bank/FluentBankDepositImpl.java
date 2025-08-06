@@ -79,4 +79,9 @@ public class FluentBankDepositImpl implements FluentBankDeposit {
     public Action all(String name) {
         return all(item -> name.equals(item.getName()));
     }
+
+    @Override
+    public Action all() {
+        return Rs2Bank::depositAll;
+    }
 }

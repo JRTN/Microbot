@@ -1,6 +1,7 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent;
 
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Skill;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.Script;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentAntiban;
@@ -46,17 +47,19 @@ public abstract class AbstractFluentScript extends Script {
     }
 
     protected boolean configureAntiban() {
-        antiban().configure(config -> {
-            config.setActivityIntensity(ActivityIntensity.EXTREME);
-            config.setActivity(Activity.GENERAL_MINING);
+        antiban()
+                .configure(
+                        config -> {
+                            config.setActivityIntensity(ActivityIntensity.HIGH);
+                            config.setActivity(Activity.fromSkill(Skill.CRAFTING));
 
-            config.setActionCooldownChance(0.85);
-            config.setMicroBreakChance(0.05);
-            config.setMicroBreakDurationMax(1);
-            config.setMicroBreakDurationMin(1);
-            config.setMouseRandomChance(0.75);
-            config.setMouseOffScreenChance(0.00);
-        });
+                            config.setActionCooldownChance(0.85);
+                            config.setMicroBreakChance(0);
+                            config.setMicroBreakDurationMax(1);
+                            config.setMicroBreakDurationMin(1);
+                            config.setMouseRandomChance(0.75);
+                            config.setMouseOffScreenChance(0.00);
+                        });
 
         return true;
     }

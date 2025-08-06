@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * Base interface for interacting with item storage containers in Old School RuneScape.
+ * Base interface for interacting with item storage containers.
  *
  * <p>This interface provides a unified API for working with any container that can store items,
  * such as the player's inventory, bank, equipment slots, or other storage interfaces. It abstracts

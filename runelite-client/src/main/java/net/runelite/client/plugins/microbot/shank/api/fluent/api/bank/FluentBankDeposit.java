@@ -1,5 +1,7 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.api.bank;
 
+import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
+
 /**
  * Fluent API for depositing items from the player's inventory to the bank.
  *
@@ -20,5 +22,5 @@ package net.runelite.client.plugins.microbot.shank.api.fluent.api.bank;
  * @see net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentBank
  */
 public interface FluentBankDeposit extends FluentBankItemQuantityChange {
-
+    Action all();
 }
