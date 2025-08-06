@@ -10,19 +10,11 @@ public interface FluentBankItemQuantityChange {
     Action one(int id);
     Action one(String name);
 
-    Action ten(Predicate<Rs2ItemModel> item);
-    Action ten(int id);
-    Action ten(String name);
-
-    Action x(Predicate<Rs2ItemModel> item);
-    Action x(int id);
-    Action x(String name);
+    Action x(Predicate<Rs2ItemModel> item, int amount);
+    Action x(int id, int amount);
+    Action x(String name, int amount);
 
     Action all(Predicate<Rs2ItemModel> item);
     Action all(int id);
     Action all(String name);
-
-    Action allButOne(Predicate<Rs2ItemModel> item);
-    Action allButOne(int id);
-    Action allButOne(String name);
 }

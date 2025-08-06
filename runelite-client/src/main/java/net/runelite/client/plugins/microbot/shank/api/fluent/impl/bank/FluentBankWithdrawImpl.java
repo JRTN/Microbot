@@ -2,84 +2,81 @@ package net.runelite.client.plugins.microbot.shank.api.fluent.impl.bank;
 
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.bank.FluentBankWithdraw;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
+import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 
 import java.util.function.Predicate;
+
+import static net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent.bank;
 
 public class FluentBankWithdrawImpl implements FluentBankWithdraw {
 
     @Override
     public Action one(Predicate<Rs2ItemModel> item) {
-        return null;
+        var bankItem = bank().getBankItem(item);
+
+        return bankItem.<Action>map(itemModel -> () -> {
+            try {
+                return Rs2Bank.withdrawOne(itemModel.getId());
+            } catch (Exception ex) {
+                return false;
+            }
+        }).orElseGet(() -> () -> false);
     }
 
     @Override
     public Action one(int id) {
-        return null;
+        return one(item -> item.getId() == id);
     }
 
     @Override
     public Action one(String name) {
-        return null;
+        return one(item -> name.equals(item.getName()));
     }
 
     @Override
-    public Action ten(Predicate<Rs2ItemModel> item) {
-        return null;
+    public Action x(Predicate<Rs2ItemModel> item, int amount) {
+        var bankItem = bank().getBankItem(item);
+
+        return bankItem.<Action>map(itemModel -> () -> {
+            try {
+                return Rs2Bank.withdrawX(itemModel.getId(), amount);
+            } catch (Exception ex) {
+                return false;
+            }
+        }).orElseGet(() -> () -> false);
     }
 
     @Override
-    public Action ten(int id) {
-        return null;
+    public Action x(int id, int amount) {
+        return x(item -> item.getId() == id, amount);
     }
 
     @Override
-    public Action ten(String name) {
-        return null;
-    }
-
-    @Override
-    public Action x(Predicate<Rs2ItemModel> item) {
-        return null;
-    }
-
-    @Override
-    public Action x(int id) {
-        return null;
-    }
-
-    @Override
-    public Action x(String name) {
-        return null;
+    public Action x(String name, int amount) {
+        return x(item -> name.equals(item.getName()), amount);
     }
 
     @Override
     public Action all(Predicate<Rs2ItemModel> item) {
-        return null;
+        var bankItem = bank().getBankItem(item);
+
+        return bankItem.<Action>map(itemModel -> () -> {
+            try {
+                return Rs2Bank.withdrawAll(itemModel.getId());
+            } catch (Exception ex) {
+                return false;
+            }
+        }).orElseGet(() -> () -> false);
     }
 
     @Override
     public Action all(int id) {
-        return null;
+        return all(item -> item.getId() == id);
     }
 
     @Override
     public Action all(String name) {
-        return null;
-    }
-
-    @Override
-    public Action allButOne(Predicate<Rs2ItemModel> item) {
-        return null;
-    }
-
-    @Override
-    public Action allButOne(int id) {
-        return null;
-    }
-
-    @Override
-    public Action allButOne(String name) {
-        return null;
+        return all(item -> name.equals(item.getName()));
     }
 }

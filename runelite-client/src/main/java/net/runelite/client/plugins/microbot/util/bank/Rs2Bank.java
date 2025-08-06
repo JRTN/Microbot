@@ -751,7 +751,7 @@ public class Rs2Bank {
      *
      * @param rs2Item item to withdraw
      */
-    public static boolean withdrawOne(Rs2ItemModel rs2Item) {
+    private static boolean withdrawOne(Rs2ItemModel rs2Item) {
         if (rs2Item == null) return false;
         if (!isOpen()) return false;
         if (Rs2Inventory.isFull()) return false;
@@ -985,7 +985,7 @@ public class Rs2Bank {
      *
      * @return
      */
-    private static boolean withdrawAll(Rs2ItemModel rs2Item) {
+    public static boolean withdrawAll(Rs2ItemModel rs2Item) {
         if (!isOpen()) return false;
         if (rs2Item == null) return false;
         if (Rs2Inventory.isFull()) return false;

@@ -1,6 +1,7 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.impl.bank;
 
-import net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent;
+import static net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent.inventory;
+
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.bank.FluentBankDeposit;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.util.bank.Rs2Bank;
@@ -12,11 +13,11 @@ public class FluentBankDepositImpl implements FluentBankDeposit {
 
     @Override
     public Action one(Predicate<Rs2ItemModel> item) {
-        var bankItem = Rs2Fluent.bank().getBankItem(item);
+        var inventoryItem = inventory().getItems(item).stream().findFirst();
 
-        return bankItem.<Action>map(itemModel -> () -> {
+        return inventoryItem.<Action>map(itemModel -> () -> {
             try {
-                return Rs2Bank.withdrawOne(itemModel);
+                return Rs2Bank.depositOne(itemModel.getId());
             } catch (Exception ex) {
                 return false;
             }
@@ -34,38 +35,39 @@ public class FluentBankDepositImpl implements FluentBankDeposit {
     }
 
     @Override
-    public Action ten(Predicate<Rs2ItemModel> item) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public Action x(Predicate<Rs2ItemModel> item, int amount) {
+        var inventoryItem = inventory().getItems(item).stream().findFirst();
+
+        return inventoryItem.<Action>map(itemModel -> () -> {
+            try {
+                return Rs2Bank.depositX(itemModel.getId(), amount);
+            } catch (Exception ex) {
+                return false;
+            }
+        }).orElseGet(() -> () -> false);
     }
 
     @Override
-    public Action ten(int id) {
-        return ten(item -> item.getId() == id);
+    public Action x(int id, int amount) {
+        return x(item -> item.getId() == id, amount);
     }
 
     @Override
-    public Action ten(String name) {
-        return ten(item -> name.equals(item.getName()));
-    }
-
-    @Override
-    public Action x(Predicate<Rs2ItemModel> item) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    @Override
-    public Action x(int id) {
-        return x(item -> item.getId() == id);
-    }
-
-    @Override
-    public Action x(String name) {
-        return x(item -> name.equals(item.getName()));
+    public Action x(String name, int amount) {
+        return x(item -> name.equals(item.getName()), amount);
     }
 
     @Override
     public Action all(Predicate<Rs2ItemModel> item) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        var inventoryItem = inventory().getItems(item).stream().findFirst();
+
+        return inventoryItem.<Action>map(itemModel -> () -> {
+            try {
+                return Rs2Bank.depositAll(itemModel.getId());
+            } catch (Exception ex) {
+                return false;
+            }
+        }).orElseGet(() -> () -> false);
     }
 
     @Override
@@ -76,20 +78,5 @@ public class FluentBankDepositImpl implements FluentBankDeposit {
     @Override
     public Action all(String name) {
         return all(item -> name.equals(item.getName()));
-    }
-
-    @Override
-    public Action allButOne(Predicate<Rs2ItemModel> item) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    @Override
-    public Action allButOne(int id) {
-        return allButOne(item -> item.getId() == id);
-    }
-
-    @Override
-    public Action allButOne(String name) {
-        return allButOne(item -> name.equals(item.getName()));
     }
 }
