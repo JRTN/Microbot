@@ -98,6 +98,10 @@ public interface Rs2Fluent {
         return new FluentAntibanImpl();
     }
 
+    static FluentBank bank() {
+        return new FluentBankImpl();
+    }
+
     static FluentCombat combat() {
         return new FluentCombatImpl();
     }
@@ -134,6 +138,10 @@ public interface Rs2Fluent {
      */
     static FluentInventory inventory() {
         return new FluentInventoryImpl();
+    }
+
+    static FluentPlayer player() {
+        return new FluentPlayerImpl();
     }
 
     static FluentTiming timing() {

@@ -36,6 +36,9 @@ public class M1D1Script extends AbstractFluentScript {
 
     @Override
     protected void onLoop() {
+        final var ironOre = 440;
+        final var dropOreThreshold = 3;
+
         when(doesNotHavePickaxe())
                 .throwException("Player does not have pickaxe - cannot continue mining!");
 
@@ -43,14 +46,14 @@ public class M1D1Script extends AbstractFluentScript {
                 .then(combat().specialAttack().use())
                 .waitUntil(combat().specialAttack()::isLow);
 
-        when(inventory().count(IRON_ORE_ID) >= MAX_IRON_ORE_COUNT)
-                .then(inventory().dropAll(IRON_ORE_ID))
+        when(inventory().count(ironOre) >= dropOreThreshold)
+                .then(inventory().dropAll(ironOre))
                 .then(timing()
-                        .sleepUntil(() -> !inventory().contains(IRON_ORE_ID), this::pollingRate, 5000)
+                        .sleepUntil(() -> !inventory().contains(ironOre), this::pollingRate, 5000)
                         .whileDoing(antiban().moveMouseOffScreen()))
                 .then(antiban().actionCooldown());
 
-        when(inventory().hasSpace() && !Rs2Player.isAnimating())
+        when(inventory().hasSpace() && player().isIdle())
                 .then(this::mineRock)
                 .then(antiban().actionCooldown());
     }

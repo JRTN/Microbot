@@ -241,6 +241,10 @@ public interface FluentTiming {
      * @see #repeatUntil(Supplier, BooleanSupplier, LongSupplier, long)
      */
     SleepAction sleepUntil(BooleanSupplier condition, LongSupplier pollingRateSupplier, long timeoutMs);
+    SleepAction sleepUntil(BooleanSupplier condition, LongSupplier pollingRateSupplier);
+    SleepAction sleepUntil(BooleanSupplier condition, long pollingRate, long timeoutMs);
+    SleepAction sleepUntil(BooleanSupplier condition, long pollingRate);
+    SleepAction sleepUntil(BooleanSupplier condition);
 
     /**
      * Creates a sleep action that repeatedly executes an action until an exit condition is met.

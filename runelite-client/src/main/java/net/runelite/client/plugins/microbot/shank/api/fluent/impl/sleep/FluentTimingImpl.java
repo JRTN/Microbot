@@ -10,6 +10,9 @@ import java.util.function.Supplier;
 
 public class FluentTimingImpl implements FluentTiming {
 
+    private long defaultTimeoutMs = 30_000;
+    private long defaultPollingRateMs = 600;
+
     @Override
     public SleepAction sleep(LongSupplier millisecondsSupplier) {
         return new SleepActionImpl(millisecondsSupplier);
@@ -29,6 +32,26 @@ public class FluentTimingImpl implements FluentTiming {
     public SleepAction sleepUntil(
             BooleanSupplier condition, LongSupplier pollingRateSupplier, long timeoutMs) {
         return new SleepActionImpl(condition, pollingRateSupplier, timeoutMs);
+    }
+
+    @Override
+    public SleepAction sleepUntil(BooleanSupplier condition, LongSupplier pollingRateSupplier) {
+        return sleepUntil(condition, pollingRateSupplier, defaultTimeoutMs);
+    }
+
+    @Override
+    public SleepAction sleepUntil(BooleanSupplier condition, long pollingRate, long timeoutMs) {
+        return sleepUntil(condition, () -> pollingRate, timeoutMs);
+    }
+
+    @Override
+    public SleepAction sleepUntil(BooleanSupplier condition, long pollingRate) {
+        return sleepUntil(condition, pollingRate, defaultTimeoutMs);
+    }
+
+    @Override
+    public SleepAction sleepUntil(BooleanSupplier condition) {
+        return sleepUntil(condition, defaultPollingRateMs, defaultTimeoutMs);
     }
 
     @Override
