@@ -280,12 +280,221 @@ public interface FluentInventory {
      */
     int count(String name);
 
+    /**
+     * Checks if the inventory contains any items matching the given predicate.
+     *
+     * <p>This method returns true if at least one item in the inventory satisfies
+     * the predicate condition. It's more efficient than counting when you only
+     * need to know if matching items exist.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Check if we have any food
+     * boolean hasFood = inventory().contains(Rs2ItemModel::isFood);
+     *
+     * // Check if we have any valuable items
+     * boolean hasValuableItems = inventory().contains(item -> item.getPrice() > 10000);
+     *
+     * // Check for specific item categories
+     * boolean hasWeapons = inventory().contains(item ->
+     *     item.getName().contains("sword") || item.getName().contains("bow"));
+     *
+     * // Use in conditional actions
+     * when(() -> !inventory().contains(Rs2ItemModel::isFood))
+     *     .then(bank().withdraw("Shark", 10))
+     *     .onSuccess(log("Restocked food"));
+     * }</pre>
+     *
+     * @param predicate The condition to test items against
+     * @return true if any item matches the predicate, false otherwise
+     * @see #contains(int)
+     * @see #contains(String)
+     * @see #count(Predicate)
+     * @see Rs2ItemModel
+     */
     boolean contains(Predicate<Rs2ItemModel> predicate);
+
+    /**
+     * Checks if the inventory contains any items with the specified ID.
+     *
+     * <p>This method returns true if at least one item with the given ID exists
+     * in the inventory, regardless of quantity.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Check if we have coins (ID: 995)
+     * boolean hasCoins = inventory().contains(995);
+     *
+     * // Check for specific equipment
+     * boolean hasRuneSword = inventory().contains(1289); // Rune sword ID
+     *
+     * // Use in conditional logic
+     * when(() -> inventory().contains(385)) // Shark ID
+     *     .then(inventory().use(385))
+     *     .onSuccess(log("Ate a shark"));
+     *
+     * // Check for quest items
+     * boolean hasQuestItem = inventory().contains(1234); // Replace with actual quest item ID
+     * }</pre>
+     *
+     * @param id The item ID to check for
+     * @return true if any item with the specified ID exists, false otherwise
+     * @see #contains(String)
+     * @see #contains(Predicate)
+     * @see #count(int)
+     * @see Rs2ItemModel#getId()
+     */
     boolean contains(int id);
+
+    /**
+     * Checks if the inventory contains any items with the specified name.
+     *
+     * <p>The name matching is case-sensitive and must match exactly. This method
+     * returns true if at least one item with the given name exists in the inventory.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Check if we have sharks
+     * boolean hasSharks = inventory().contains("Shark");
+     *
+     * // Check for specific tools
+     * boolean hasPickaxe = inventory().contains("Dragon pickaxe");
+     *
+     * // Use in conditional actions
+     * when(() -> inventory().contains("Shark"))
+     *     .then(inventory().use("Shark"))
+     *     .onSuccess(log("Ate a shark"));
+     *
+     * // Check for multiple item types
+     * boolean hasFood = inventory().contains("Shark") ||
+     *                   inventory().contains("Lobster") ||
+     *                   inventory().contains("Tuna");
+     * }</pre>
+     *
+     * @param name The exact item name to check for
+     * @return true if any item with the specified name exists, false otherwise
+     * @see #contains(int)
+     * @see #contains(Predicate)
+     * @see #count(String)
+     * @see Rs2ItemModel#getName()
+     */
     boolean contains(String name);
 
+    /**
+     * Creates an action to interact with an item matching the given predicate using the specified action.
+     *
+     * <p>This method finds the first item that matches the predicate and performs the specified
+     * action on it. The available actions depend on the item type and include options like
+     * "Eat", "Drink", "Wield", "Wear", "Drop", etc.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Eat any food item
+     * inventory().interact(Rs2ItemModel::isFood, "Eat")
+     *     .onSuccess(log("Ate food"))
+     *     .onFailure(log("No food to eat"));
+     *
+     * // Wield the first weapon found
+     * inventory().interact(item -> item.getName().contains("sword"), "Wield")
+     *     .onSuccess(log("Equipped weapon"));
+     *
+     * // Drink any potion
+     * inventory().interact(item -> item.getName().contains("potion"), "Drink")
+     *     .onSuccess(log("Drank potion"));
+     *
+     * // Use custom item selection logic
+     * inventory().interact(item -> item.getPrice() > 1000 && item.isTradeable(), "Drop")
+     *     .onSuccess(log("Dropped valuable item"));
+     * }</pre>
+     *
+     * <h3>Common Actions</h3>
+     * <ul>
+     *   <li><strong>Food:</strong> "Eat"</li>
+     *   <li><strong>Potions:</strong> "Drink"</li>
+     *   <li><strong>Weapons:</strong> "Wield"</li>
+     *   <li><strong>Armor:</strong> "Wear"</li>
+     *   <li><strong>Any item:</strong> "Drop", "Examine"</li>
+     * </ul>
+     *
+     * @param target The predicate to match the item to interact with
+     * @param action The action to perform on the item (case-sensitive)
+     * @return An Action that interacts with the matching item
+     * @see #interact(int, String)
+     * @see #interact(String, String)
+     * @see Rs2ItemModel#getInventoryActions()
+     */
     Action interact(Predicate<Rs2ItemModel> target, String action);
+
+    /**
+     * Creates an action to interact with an item with the specified ID using the specified action.
+     *
+     * <p>This method finds an item with the given ID and performs the specified action on it.
+     * For stackable items, the entire stack is typically affected.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Eat a shark (ID: 385)
+     * inventory().interact(385, "Eat")
+     *     .onSuccess(log("Ate shark"))
+     *     .onFailure(log("No shark to eat"));
+     *
+     * // Wield a rune sword (ID: 1289)
+     * inventory().interact(1289, "Wield")
+     *     .onSuccess(log("Equipped rune sword"));
+     *
+     * // Drink a prayer potion (ID: 2434)
+     * inventory().interact(2434, "Drink")
+     *     .onSuccess(log("Drank prayer potion"));
+     *
+     * // Drop specific items
+     * inventory().interact(1234, "Drop") // Replace with actual item ID
+     *     .onSuccess(log("Dropped item"));
+     * }</pre>
+     *
+     * @param id The item ID to interact with
+     * @param action The action to perform on the item (case-sensitive)
+     * @return An Action that interacts with the item
+     * @see #interact(String, String)
+     * @see #interact(Predicate, String)
+     * @see Rs2ItemModel#getId()
+     * @see Rs2ItemModel#getInventoryActions()
+     */
     Action interact(int id, String action);
+
+    /**
+     * Creates an action to interact with an item with the specified name using the specified action.
+     *
+     * <p>This method finds an item with the given name and performs the specified action on it.
+     * The name matching is case-sensitive and must match exactly.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Eat a shark
+     * inventory().interact("Shark", "Eat")
+     *     .onSuccess(log("Ate shark"))
+     *     .onFailure(log("No shark to eat"));
+     *
+     * // Wield a dragon sword
+     * inventory().interact("Dragon sword", "Wield")
+     *     .onSuccess(log("Equipped dragon sword"));
+     *
+     * // Drink a combat potion
+     * inventory().interact("Combat potion(4)", "Drink")
+     *     .onSuccess(log("Drank combat potion"));
+     *
+     * // Examine an item
+     * inventory().interact("Mystery box", "Examine")
+     *     .onSuccess(log("Examined mystery box"));
+     * }</pre>
+     *
+     * @param name The exact item name to interact with
+     * @param action The action to perform on the item (case-sensitive)
+     * @return An Action that interacts with the item
+     * @see #interact(int, String)
+     * @see #interact(Predicate, String)
+     * @see Rs2ItemModel#getName()
+     * @see Rs2ItemModel#getInventoryActions()
+     */
     Action interact(String name, String action);
 
     /**
@@ -575,14 +784,259 @@ public interface FluentInventory {
      */
     Action dropAllExcept(String name);
 
+    /**
+     * Creates an action to use (activate) an item matching the given predicate.
+     *
+     * <p>This method finds the first item that matches the predicate and uses it.
+     * The "use" action is typically the primary action for consumable items like
+     * food, potions, or tools. This is equivalent to right-clicking and selecting
+     * the first option, or left-clicking for most items.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Use any food item when health is low
+     * when(() -> player().getHealthPercent() < 50)
+     *     .then(inventory().use(Rs2ItemModel::isFood))
+     *     .onSuccess(log("Used food item"));
+     *
+     * // Use the most expensive potion
+     * inventory().use(item -> item.getName().contains("potion") && item.getPrice() > 1000)
+     *     .onSuccess(log("Used expensive potion"));
+     *
+     * // Use teleport items
+     * inventory().use(item -> item.getName().contains("teleport"))
+     *     .onSuccess(log("Used teleport"));
+     * }</pre>
+     *
+     * @param target The predicate to match the item to use
+     * @return An Action that uses the matching item
+     * @see #use(int)
+     * @see #use(String)
+     * @see Rs2ItemModel
+     */
     Action use(Predicate<Rs2ItemModel> target);
+
+    /**
+     * Creates an action to use (activate) an item with the specified ID.
+     *
+     * <p>This method finds an item with the given ID and uses it. For consumable
+     * items, this typically consumes one item from the stack.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Use a shark (ID: 385)
+     * inventory().use(385)
+     *     .onSuccess(log("Ate shark"))
+     *     .onFailure(log("No shark available"));
+     *
+     * // Use a prayer potion (ID: 2434)
+     * inventory().use(2434)
+     *     .onSuccess(log("Drank prayer potion"));
+     *
+     * // Use a teleport tablet
+     * inventory().use(8007) // Varrock teleport tablet ID
+     *     .onSuccess(log("Teleported to Varrock"));
+     * }</pre>
+     *
+     * @param id The item ID to use
+     * @return An Action that uses the item with the specified ID
+     * @see #use(String)
+     * @see #use(Predicate)
+     * @see Rs2ItemModel#getId()
+     */
     Action use(int id);
+
+    /**
+     * Creates an action to use (activate) an item with the specified name.
+     *
+     * <p>This method finds an item with the given name and uses it. The name
+     * matching is case-sensitive and must match exactly.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Use a shark for healing
+     * inventory().use("Shark")
+     *     .onSuccess(log("Ate shark"))
+     *     .onFailure(log("No shark available"));
+     *
+     * // Use a specific potion
+     * inventory().use("Super strength(4)")
+     *     .onSuccess(log("Drank super strength potion"));
+     *
+     * // Use teleport items
+     * inventory().use("House teleport")
+     *     .onSuccess(log("Teleported home"));
+     * }</pre>
+     *
+     * @param name The exact item name to use
+     * @return An Action that uses the item with the specified name
+     * @see #use(int)
+     * @see #use(Predicate)
+     * @see Rs2ItemModel#getName()
+     */
     Action use(String name);
 
+    /**
+     * Creates an action to use one item on another item in the inventory.
+     *
+     * <p>This method finds the first item matching each predicate and uses the first
+     * item on the second item. This is commonly used for combining items, such as
+     * using thread on a needle, or using one item to create another.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Use thread on needle for crafting
+     * inventory().useOn(
+     *     item -> item.getName().equals("Thread"),
+     *     item -> item.getName().equals("Needle")
+     * ).onSuccess(log("Combined thread with needle"));
+     *
+     * // Use feathers on arrow shafts
+     * inventory().useOn(
+     *     item -> item.getName().contains("Feather"),
+     *     item -> item.getName().contains("Arrow shaft")
+     * ).onSuccess(log("Added feathers to arrow shafts"));
+     *
+     * // Use gem on jewelry
+     * inventory().useOn(
+     *     item -> item.getName().contains("Ruby"),
+     *     item -> item.getName().contains("Gold ring")
+     * ).onSuccess(log("Created ruby ring"));
+     * }</pre>
+     *
+     * @param first The predicate to match the first item (the one being used)
+     * @param second The predicate to match the second item (the target)
+     * @return An Action that uses the first item on the second item
+     * @see #useOn(int, int)
+     * @see #useOn(String, String)
+     * @see Rs2ItemModel
+     */
     Action useOn(Predicate<Rs2ItemModel> first, Predicate<Rs2ItemModel> second);
+
+    /**
+     * Creates an action to use one item on another item in the inventory by their IDs.
+     *
+     * <p>This method finds items with the specified IDs and uses the first item on
+     * the second item. This is useful when you know the exact item IDs.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Use feathers (ID: 314) on arrow shafts (ID: 52)
+     * inventory().useOn(314, 52)
+     *     .onSuccess(log("Created headless arrows"));
+     *
+     * // Use thread (ID: 1734) on needle (ID: 1733)
+     * inventory().useOn(1734, 1733)
+     *     .onSuccess(log("Ready for crafting"));
+     *
+     * // Use gem on ring
+     * inventory().useOn(1603, 1635) // Ruby on gold ring
+     *     .onSuccess(log("Created ruby ring"));
+     * }</pre>
+     *
+     * @param first The ID of the first item (the one being used)
+     * @param second The ID of the second item (the target)
+     * @return An Action that uses the first item on the second item
+     * @see #useOn(String, String)
+     * @see #useOn(Predicate, Predicate)
+     * @see Rs2ItemModel#getId()
+     */
     Action useOn(int first, int second);
+
+    /**
+     * Creates an action to use one item on another item in the inventory by their names.
+     *
+     * <p>This method finds items with the specified names and uses the first item on
+     * the second item. The name matching is case-sensitive and must match exactly.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Use feathers on arrow shafts for fletching
+     * inventory().useOn("Feather", "Arrow shaft")
+     *     .onSuccess(log("Created headless arrows"));
+     *
+     * // Use thread on needle for crafting
+     * inventory().useOn("Thread", "Needle")
+     *     .onSuccess(log("Ready for crafting"));
+     *
+     * // Combine items for cooking
+     * inventory().useOn("Raw chicken", "Fire")
+     *     .onSuccess(log("Started cooking chicken"));
+     * }</pre>
+     *
+     * @param first The exact name of the first item (the one being used)
+     * @param second The exact name of the second item (the target)
+     * @return An Action that uses the first item on the second item
+     * @see #useOn(int, int)
+     * @see #useOn(Predicate, Predicate)
+     * @see Rs2ItemModel#getName()
+     */
     Action useOn(String first, String second);
 
+    /**
+     * Creates an action to use an inventory item on a game object in the world.
+     *
+     * <p>This method finds the first item matching the predicate and the first game object
+     * matching the predicate, then uses the item on the object. This is commonly used for
+     * activities like using items on furnaces, anvils, altars, or other interactive objects.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Use ore on furnace for smelting
+     * inventory().useOnGameObject(
+     *     item -> item.getName().contains("Iron ore"),
+     *     obj -> obj.getName().equals("Furnace")
+     * ).onSuccess(log("Started smelting iron ore"));
+     *
+     * // Use logs on fire for cooking
+     * inventory().useOnGameObject(
+     *     item -> item.getName().contains("Raw"),
+     *     obj -> obj.getName().equals("Fire")
+     * ).onSuccess(log("Started cooking"));
+     *
+     * // Use bones on altar for prayer
+     * inventory().useOnGameObject(
+     *     item -> item.getName().contains("bones"),
+     *     obj -> obj.getName().contains("Altar")
+     * ).onSuccess(log("Offered bones at altar"));
+     * }</pre>
+     *
+     * @param item The predicate to match the inventory item to use
+     * @param obj The predicate to match the game object to use the item on
+     * @return An Action that uses the item on the game object
+     * @see #useOnGameObject(int, int)
+     * @see GameObject
+     * @see Rs2ItemModel
+     */
     Action useOnGameObject(Predicate<Rs2ItemModel> item, Predicate<GameObject> obj);
+
+    /**
+     * Creates an action to use an inventory item on a game object in the world by their IDs.
+     *
+     * <p>This method finds an item with the specified item ID and a game object with the
+     * specified object ID, then uses the item on the object.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Use iron ore (ID: 440) on furnace (ID: 16469)
+     * inventory().useOnGameObject(440, 16469)
+     *     .onSuccess(log("Started smelting iron ore"));
+     *
+     * // Use raw fish on fire for cooking
+     * inventory().useOnGameObject(317, 2732) // Raw shrimp on fire
+     *     .onSuccess(log("Started cooking shrimp"));
+     *
+     * // Use bones on altar for prayer
+     * inventory().useOnGameObject(526, 409) // Bones on altar
+     *     .onSuccess(log("Offered bones at altar"));
+     * }</pre>
+     *
+     * @param item The ID of the inventory item to use
+     * @param obj The ID of the game object to use the item on
+     * @return An Action that uses the item on the game object
+     * @see #useOnGameObject(Predicate, Predicate)
+     * @see GameObject#getId()
+     * @see Rs2ItemModel#getId()
+     */
     Action useOnGameObject(int item, int obj);
 }
