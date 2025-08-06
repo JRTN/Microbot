@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.api;
 
+import net.runelite.api.GameObject;
 import net.runelite.api.ItemContainer;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
@@ -278,6 +279,14 @@ public interface FluentInventory {
      * @see #count(Predicate)
      */
     int count(String name);
+
+    boolean contains(Predicate<Rs2ItemModel> predicate);
+    boolean contains(int id);
+    boolean contains(String name);
+
+    Action interact(Predicate<Rs2ItemModel> target, String action);
+    Action interact(int id, String action);
+    Action interact(String name, String action);
 
     /**
      * Creates an action to drop one item matching the given predicate.
@@ -565,4 +574,15 @@ public interface FluentInventory {
      * @see #dropAll(String)
      */
     Action dropAllExcept(String name);
+
+    Action use(Predicate<Rs2ItemModel> target);
+    Action use(int id);
+    Action use(String name);
+
+    Action useOn(Predicate<Rs2ItemModel> first, Predicate<Rs2ItemModel> second);
+    Action useOn(int first, int second);
+    Action useOn(String first, String second);
+
+    Action useOnGameObject(Predicate<Rs2ItemModel> item, Predicate<GameObject> obj);
+    Action useOnGameObject(int item, int obj);
 }

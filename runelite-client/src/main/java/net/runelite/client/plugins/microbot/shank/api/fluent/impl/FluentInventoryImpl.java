@@ -1,5 +1,8 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.impl;
 
+import static net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent.gameObject;
+
+import net.runelite.api.GameObject;
 import net.runelite.api.ItemContainer;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentInventory;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
@@ -56,8 +59,38 @@ public class FluentInventoryImpl implements FluentInventory {
     }
 
     @Override
+    public boolean contains(Predicate<Rs2ItemModel> predicate) {
+        return count(predicate) > 0;
+    }
+
+    @Override
+    public boolean contains(int id) {
+        return count(id) > 0;
+    }
+
+    @Override
+    public boolean contains(String name) {
+        return count(name) > 0;
+    }
+
+    @Override
+    public Action interact(Predicate<Rs2ItemModel> target, String action) {
+        return () -> Rs2Inventory.interact(target, action);
+    }
+
+    @Override
+    public Action interact(int id, String action) {
+        return interact(item -> item.getId() == id, action);
+    }
+
+    @Override
+    public Action interact(String name, String action) {
+        return interact(item -> name.equals(item.getName()), action);
+    }
+
+    @Override
     public Action drop(Predicate<Rs2ItemModel> target) {
-        return () -> Rs2Inventory.drop(target);
+        return interact(target, "Drop");
     }
 
     @Override
@@ -105,5 +138,51 @@ public class FluentInventoryImpl implements FluentInventory {
     @Override
     public Action dropAllExcept(String name) {
         return dropAll(model -> name.equals(model.getName()));
+    }
+
+    @Override
+    public Action use(Predicate<Rs2ItemModel> target) {
+        return interact(target, "Use");
+    }
+
+    @Override
+    public Action use(int id) {
+        return use(item -> item.getId() == id);
+    }
+
+    @Override
+    public Action use(String name) {
+        return use(item -> name.equals(item.getName()));
+    }
+
+    @Override
+    public Action useOn(Predicate<Rs2ItemModel> first, Predicate<Rs2ItemModel> second) {
+        return use(first).then(use(second));
+    }
+
+    @Override
+    public Action useOn(int first, int second) {
+        return use(first).then(use(second));
+    }
+
+    @Override
+    public Action useOn(String first, String second) {
+        return use(first).then(use(second));
+    }
+
+    @Override
+    public Action useOnGameObject(Predicate<Rs2ItemModel> item, Predicate<GameObject> obj) {
+        var object = gameObject().getNearestGameObject(obj);
+
+        if (object.isEmpty()) {
+            return () -> false;
+        }
+
+        return use(item).then(gameObject().interactWith(object.get(), "Use"));
+    }
+
+    @Override
+    public Action useOnGameObject(int item, int obj) {
+        return useOnGameObject(target -> target.getId() == item, target -> target.getId() == obj);
     }
 }
