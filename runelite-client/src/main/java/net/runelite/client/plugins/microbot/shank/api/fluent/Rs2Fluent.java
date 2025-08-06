@@ -1,14 +1,10 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent;
 
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentAntiban;
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentEquipment;
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentInventory;
-import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentGameObject;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.*;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentCombat;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.sleep.FluentTiming;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentAntibanImpl;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentEquipmentImpl;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.FluentInventoryImpl;
-import net.runelite.client.plugins.microbot.shank.api.fluent.impl.gameobject.FluentGameObjectImpl;
+import net.runelite.client.plugins.microbot.shank.api.fluent.impl.*;
+import net.runelite.client.plugins.microbot.shank.api.fluent.impl.combat.FluentSpecialAttackImpl;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.sleep.FluentTimingImpl;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.SituationClause;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.SituationResult;
@@ -102,6 +98,10 @@ public interface Rs2Fluent {
         return new FluentAntibanImpl();
     }
 
+    static FluentCombat combat() {
+        return new FluentCombatImpl();
+    }
+
     /**
      * Creates a fluent interface for performing actions on the player's equipment.
      *
@@ -115,6 +115,10 @@ public interface Rs2Fluent {
      */
     static FluentEquipment equipment() {
         return new FluentEquipmentImpl();
+    }
+
+    static FluentGameObject gameObject() {
+        return new FluentGameObjectImpl();
     }
 
     /**
@@ -134,9 +138,5 @@ public interface Rs2Fluent {
 
     static FluentTiming timing() {
         return new FluentTimingImpl();
-    }
-
-    static FluentGameObject gameObject() {
-        return new FluentGameObjectImpl();
     }
 }

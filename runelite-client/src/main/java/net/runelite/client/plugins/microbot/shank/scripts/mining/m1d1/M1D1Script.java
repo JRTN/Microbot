@@ -39,19 +39,20 @@ public class M1D1Script extends AbstractFluentScript {
         when(doesNotHavePickaxe())
                 .throwException("Player does not have pickaxe - cannot continue mining!");
 
-        when(Rs2Combat.getSpecEnergy() == 1000 && !Rs2Combat.getSpecState())
-                .then(this::activateSpecialAttack)
-                .waitUntil(() -> Rs2Combat.getSpecEnergy() < 1000, 500, 3000);
+        when(combat().specialAttack().canUse())
+                .then(combat().specialAttack().use())
+                .waitUntil(combat().specialAttack()::isLow);
 
         when(inventory().count(IRON_ORE_ID) >= MAX_IRON_ORE_COUNT)
                 .then(inventory().dropAll(IRON_ORE_ID))
-                .waitUntil(() -> inventory().count(IRON_ORE_ID) < 1, () -> 75, 5000)
-                //.then(timing().sleepUntil(() -> inventory().count(IRON_ORE_ID) < 1, () -> 75, 5000))
+                .then(timing()
+                        .sleepUntil(() -> !inventory().contains(IRON_ORE_ID), this::pollingRate, 5000)
+                        .whileDoing(antiban().moveMouseOffScreen()))
                 .then(antiban().actionCooldown());
 
-        when(!Rs2Inventory.isFull() && !Rs2Player.isAnimating())
+        when(inventory().hasSpace() && !Rs2Player.isAnimating())
                 .then(this::mineRock)
-                .onFailure(this::logMiningFailure);
+                .then(antiban().actionCooldown());
     }
 
     @Override

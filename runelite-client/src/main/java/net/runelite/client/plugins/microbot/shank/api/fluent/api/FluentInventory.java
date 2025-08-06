@@ -380,6 +380,11 @@ public interface FluentInventory {
      */
     boolean contains(String name);
 
+    boolean isEmpty();
+    boolean isFull();
+    boolean hasSpace(int amount);
+    boolean hasSpace();
+
     /**
      * Creates an action to interact with an item matching the given predicate using the specified action.
      *

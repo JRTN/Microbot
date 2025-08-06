@@ -74,6 +74,26 @@ public class FluentInventoryImpl implements FluentInventory {
     }
 
     @Override
+    public boolean isEmpty() {
+        return hasSpace(28);
+    }
+
+    @Override
+    public boolean isFull() {
+        return !hasSpace();
+    }
+
+    @Override
+    public boolean hasSpace(int amount) {
+        return true;
+    }
+
+    @Override
+    public boolean hasSpace() {
+        return hasSpace(1);
+    }
+
+    @Override
     public Action interact(Predicate<Rs2ItemModel> target, String action) {
         return () -> Rs2Inventory.interact(target, action);
     }
