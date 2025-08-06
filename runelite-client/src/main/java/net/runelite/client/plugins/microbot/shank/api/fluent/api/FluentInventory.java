@@ -6,9 +6,7 @@ import net.runelite.client.plugins.microbot.shank.api.fluent.api.general.FluentI
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 
-import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /**
  * Fluent API for performing actions on the player's inventory in Old School RuneScape.
@@ -76,16 +74,6 @@ import java.util.stream.Stream;
  * @see Rs2ItemModel
  */
 public interface FluentInventory extends FluentItemStore {
-
-    /**
-     * Gets the underlying RuneLite ItemContainer for direct access to inventory data.
-     *
-     * <p>This provides low-level access to the inventory's raw data structure. Most users
-     * should prefer the higher-level methods provided by this interface.</p>
-     *
-     * @return The ItemContainer representing the player's inventory, or null if not available
-     */
-    ItemContainer getContainer();
 
     /**
      * Creates an action to drop one item matching the given predicate.

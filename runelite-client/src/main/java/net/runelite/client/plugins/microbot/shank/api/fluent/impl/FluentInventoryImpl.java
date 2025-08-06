@@ -4,6 +4,8 @@ import static net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent.ga
 
 import net.runelite.api.GameObject;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.gameval.InventoryID;
+import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentInventory;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.ActionChain;
@@ -22,7 +24,7 @@ public class FluentInventoryImpl implements FluentInventory {
 
     @Override
     public ItemContainer getContainer() {
-        return Rs2Inventory.inventory();
+        return Microbot.getClient().getItemContainer(InventoryID.INV);
     }
 
     @Override
@@ -78,6 +80,11 @@ public class FluentInventoryImpl implements FluentInventory {
     }
 
     @Override
+    public int capacity() {
+        return 28;
+    }
+
+    @Override
     public int countItems(Predicate<Rs2ItemModel> target) {
         return Rs2Inventory.count(target);
     }
@@ -109,7 +116,7 @@ public class FluentInventoryImpl implements FluentInventory {
 
     @Override
     public boolean isEmpty() {
-        return hasSpace(28);
+        return hasSpace(capacity());
     }
 
     @Override
@@ -119,7 +126,7 @@ public class FluentInventoryImpl implements FluentInventory {
 
     @Override
     public boolean hasSpace(int amount) {
-        return getItems().size() < 28;
+        return getItems().size() <= capacity() - amount;
     }
 
     @Override

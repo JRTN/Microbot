@@ -13,7 +13,7 @@ public class FluentBankWithdrawImpl implements FluentBankWithdraw {
 
     @Override
     public Action one(Predicate<Rs2ItemModel> item) {
-        var bankItem = bank().getBankItem(item);
+        var bankItem = bank().getItem(item);
 
         return bankItem.<Action>map(itemModel -> () -> {
             try {
@@ -36,7 +36,7 @@ public class FluentBankWithdrawImpl implements FluentBankWithdraw {
 
     @Override
     public Action x(Predicate<Rs2ItemModel> item, int amount) {
-        var bankItem = bank().getBankItem(item);
+        var bankItem = bank().getItem(item);
 
         return bankItem.<Action>map(itemModel -> () -> {
             try {
@@ -59,7 +59,7 @@ public class FluentBankWithdrawImpl implements FluentBankWithdraw {
 
     @Override
     public Action all(Predicate<Rs2ItemModel> item) {
-        var bankItem = bank().getBankItem(item);
+        var bankItem = bank().getItem(item);
 
         return bankItem.<Action>map(itemModel -> () -> {
             try {

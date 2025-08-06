@@ -5,6 +5,7 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentEquipment;
+import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.util.equipment.Rs2Equipment;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 
@@ -31,13 +32,108 @@ public class FluentEquipmentImpl implements FluentEquipment {
     }
 
     @Override
-    public List<Rs2ItemModel> getAllWorn() {
+    public List<Rs2ItemModel> getItems() {
         return items().collect(Collectors.toList());
     }
 
     @Override
-    public List<Rs2ItemModel> getWorn(Predicate<Rs2ItemModel> predicate) {
-        return items(predicate).collect(Collectors.toList());
+    public List<Rs2ItemModel> getItems(Predicate<Rs2ItemModel> item) {
+        return null;
+    }
+
+    @Override
+    public List<Rs2ItemModel> getItems(int... id) {
+        return null;
+    }
+
+    @Override
+    public List<Rs2ItemModel> getItems(String... names) {
+        return null;
+    }
+
+    @Override
+    public Optional<Rs2ItemModel> getItem(Predicate<Rs2ItemModel> item) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Rs2ItemModel> getItem(int id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Rs2ItemModel> getItem(String name) {
+        return Optional.empty();
+    }
+
+    @Override
+    public int capacity() {
+        return 0;
+    }
+
+    @Override
+    public int countItems(Predicate<Rs2ItemModel> item) {
+        return 0;
+    }
+
+    @Override
+    public int countItems(int id) {
+        return 0;
+    }
+
+    @Override
+    public int countItems(String name) {
+        return 0;
+    }
+
+    @Override
+    public boolean containsItem(Predicate<Rs2ItemModel> item) {
+        return false;
+    }
+
+    @Override
+    public boolean containsItem(int id) {
+        return false;
+    }
+
+    @Override
+    public boolean containsItem(String name) {
+        return false;
+    }
+
+    @Override
+    public boolean hasSpace() {
+        return false;
+    }
+
+    @Override
+    public boolean hasSpace(int amount) {
+        return false;
+    }
+
+    @Override
+    public boolean isFull() {
+        return false;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public Action interact(Predicate<Rs2ItemModel> target, String action) {
+        return null;
+    }
+
+    @Override
+    public Action interact(String name, String action) {
+        return null;
+    }
+
+    @Override
+    public Action interact(int id, String action) {
+        return null;
     }
 
     @Override

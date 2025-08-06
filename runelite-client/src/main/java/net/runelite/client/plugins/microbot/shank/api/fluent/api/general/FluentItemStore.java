@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.api.general;
 
+import net.runelite.api.ItemContainer;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
 
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
  * player can store and withdraw items from such as inventory, bank, equipment, etc.
  */
 public interface FluentItemStore {
+    ItemContainer getContainer();
     Stream<Rs2ItemModel> items();
     Stream<Rs2ItemModel> items(Predicate<Rs2ItemModel> predicate);
 
@@ -24,6 +26,8 @@ public interface FluentItemStore {
     Optional<Rs2ItemModel> getItem(Predicate<Rs2ItemModel> item);
     Optional<Rs2ItemModel> getItem(int id);
     Optional<Rs2ItemModel> getItem(String name);
+
+    int capacity();
 
     int countItems(Predicate<Rs2ItemModel> item);
     int countItems(int id);
