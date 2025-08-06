@@ -16,12 +16,12 @@ import java.util.function.Supplier;
  * // Simple sleep with jitter for natural timing
  * timing().sleep(1000, 200)
  *     .then(inventory().drop("Trout"))
- *     .execute();
+ *     ;
  *
  * // Wait for a condition with timeout
  * timing().sleepUntil(() -> player().isIdle(), () -> 100, 5000)
  *     .then(log("Player finished moving"))
- *     .execute();
+ *     ;
  * }</pre>
  *
  * <h2>Timing Strategies</h2>
@@ -49,7 +49,7 @@ import java.util.function.Supplier;
  * inventory().drop("Logs")
  *     .then(timing().sleep(600, 200))
  *     .then(inventory().drop("Ore"))
- *     .execute();
+ *     ;
  * }</pre>
  *
  * <h3>Animation Waiting</h3>
@@ -58,7 +58,7 @@ import java.util.function.Supplier;
  * player().interact("Mine")
  *     .then(timing().sleepUntil(() -> !player().isAnimating(), () -> 100, 10000))
  *     .then(log("Mining complete"))
- *     .execute();
+ *     ;
  * }</pre>
  *
  * <h3>Skill Training Loops</h3>
@@ -69,7 +69,7 @@ import java.util.function.Supplier;
  *     () -> inventory().count() == 28,
  *     () -> 1000 + random.nextInt(500),
  *     60000
- * ).execute();
+ * );
  * }</pre>
  *
  * @see SleepAction
@@ -88,18 +88,18 @@ public interface FluentTiming {
      * // Sleep for 1000-1200ms (1000ms + 0-200ms jitter)
      * timing().sleep(1000, 200)
      *     .then(inventory().drop("Logs"))
-     *     .execute();
+     *     ;
      *
      * // Short delay with small jitter for rapid actions
      * inventory().use("Food")
      *     .then(timing().sleep(300, 100))
      *     .then(inventory().use("Potion"))
-     *     .execute();
+     *     ;
      *
      * // Longer delay with larger jitter for less frequent actions
      * timing().sleep(5000, 2000)
      *     .then(bank().open())
-     *     .execute();
+     *     ;
      * }</pre>
      *
      * <h3>Anti-Detection Benefits</h3>
@@ -129,19 +129,19 @@ public interface FluentTiming {
      * // Dynamic sleep based on player energy
      * timing().sleep(() -> player().getEnergy() < 50 ? 2000 : 800)
      *     .then(player().walk(nextLocation))
-     *     .execute();
+     *     ;
      *
      * // Sleep time based on inventory fullness
      * timing().sleep(() -> {
      *     int items = inventory().count();
      *     return 500 + (items * 50); // Slower as inventory fills
-     * }).then(inventory().drop("Logs")).execute();
+     * }).then(inventory().drop("Logs"));
      *
      * // Random sleep within a range
      * Random random = new Random();
      * timing().sleep(() -> 1000 + random.nextInt(500))
      *     .then(bank().depositAll())
-     *     .execute();
+     *     ;
      * }</pre>
      *
      * <h3>Use Cases</h3>
@@ -171,13 +171,13 @@ public interface FluentTiming {
      * // Fixed delay for precise timing requirements
      * timing().sleep(1000)
      *     .then(interface().click("Accept"))
-     *     .execute();
+     *     ;
      *
      * // Short fixed delay between rapid actions
      * inventory().use("Logs")
      *     .then(timing().sleep(100))
      *     .then(inventory().use("Tinderbox"))
-     *     .execute();
+     *     ;
      * }</pre>
      *
      * <h3>Warning</h3>
@@ -204,26 +204,26 @@ public interface FluentTiming {
      * player().walkTo(destination)
      *     .then(timing().sleepUntil(() -> player().isIdle(), () -> 100, 10000))
      *     .then(log("Arrived at destination"))
-     *     .execute();
+     *     ;
      *
      * // Wait for interface to appear
      * bank().open()
      *     .then(timing().sleepUntil(() -> interface().isVisible("Bank"), () -> 50, 5000))
      *     .then(bank().depositAll())
-     *     .execute();
+     *     ;
      *
      * // Wait for animation to complete
      * inventory().use("Logs on Tinderbox")
      *     .then(timing().sleepUntil(() -> !player().isAnimating(), () -> 200, 15000))
      *     .then(log("Firemaking complete"))
-     *     .execute();
+     *     ;
      *
      * // Dynamic polling rate based on expected wait time
      * timing().sleepUntil(
      *     () -> inventory().contains("Cooked fish"),
      *     () -> player().isAnimating() ? 100 : 500, // Poll faster while cooking
      *     30000
-     * ).execute();
+     * );
      * }</pre>
      *
      * <h3>Best Practices</h3>
@@ -258,7 +258,7 @@ public interface FluentTiming {
      *     () -> inventory().count() == 28,
      *     () -> 1000 + random.nextInt(500),
      *     60000
-     * ).then(bank().depositInventory()).execute();
+     * ).then(bank().depositInventory());
      *
      * // Repeatedly eat food during combat until health is full
      * timing().repeatUntil(
@@ -266,7 +266,7 @@ public interface FluentTiming {
      *     () -> player().getHealthPercent() >= 95,
      *     () -> 1200 + random.nextInt(300),
      *     10000
-     * ).then(log("Health restored")).execute();
+     * ).then(log("Health restored"));
      *
      * // Repeatedly mine until pickaxe breaks or inventory is full
      * timing().repeatUntil(
@@ -274,7 +274,7 @@ public interface FluentTiming {
      *     () -> inventory().count() == 28 || !inventory().contains("Pickaxe"),
      *     () -> 2000 + random.nextInt(1000),
      *     300000
-     * ).execute();
+     * );
      *
      * // Dynamic polling based on action success
      * timing().repeatUntil(
@@ -285,7 +285,7 @@ public interface FluentTiming {
      *     () -> !monster().exists("Goblin") || player().getHealthPercent() < 30,
      *     () -> player().isInCombat() ? 600 : 1500, // Faster polling during combat
      *     120000
-     * ).execute();
+     * );
      * }</pre>
      *
      * <h3>Action Return Values</h3>

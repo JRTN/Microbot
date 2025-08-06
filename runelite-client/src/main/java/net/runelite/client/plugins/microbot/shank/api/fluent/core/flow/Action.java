@@ -68,54 +68,87 @@ package net.runelite.client.plugins.microbot.shank.api.fluent.core.flow;
  */
 @FunctionalInterface
 public interface Action {
-
     /**
-     * Executes this action and reports the result.
+     * <strong>INTERNAL USE ONLY:</strong> Executes this action and reports the result.
      *
-     * <p>This method should attempt to perform the action's intended operation and return {@code
-     * true} if successful, {@code false} if the operation failed or could not be completed.
+     * <p><strong>This method is called automatically by the fluent API framework and should
+     * not be called directly by user code.</strong> When you use the fluent API with
+     * {@code when().then()}, the framework handles execution internally.</p>
      *
-     * <h3>Implementation Guidelines</h3>
+     * <h3>Framework Usage vs User Usage</h3>
+     *
+     * <pre>{@code
+     * // CORRECT - User code, execution happens automatically
+     * when(inventory().count() == 28)
+     *     .then(inventory().drop("Logs"))
+     *     .onSuccess(log("Dropped logs"));
+     *
+     * // INCORRECT - Don't call execute() directly
+     * Action dropAction = inventory().drop("Logs");
+     * boolean result = dropAction.execute(); // Don't do this!
+     *
+     * // INCORRECT - Don't add execute() to chains
+     * when(condition)
+     *     .then(inventory().drop("Logs"))
+     *     .execute(); // This method doesn't exist on ActionResult!
+     * }</pre>
+     *
+     * <h3>When Framework Calls Execute</h3>
+     * <ul>
+     *   <li>{@code SituationClause.then(action)} &rarr; calls {@code action.execute()}</li>
+     *   <li>{@code ActionChain.execute()} &rarr; calls {@code execute()} on each action in sequence</li>
+     *   <li>{@code ActionResult.repeatUntil(...)} &rarr; calls {@code execute()} repeatedly</li>
+     *   <li>{@code SituationResult.repeatUntil(...)} &rarr; calls {@code execute()} repeatedly</li>
+     * </ul>
+     *
+     * <h3>Implementation Requirements</h3>
+     *
+     * <p>When implementing custom actions, this method must:
      *
      * <ul>
-     *   <li><strong>Be quick:</strong> Avoid blocking operations; use timeouts for waits
-     *   <li><strong>Be safe:</strong> Handle game state changes gracefully
-     *   <li><strong>Be clear:</strong> Return {@code false} for any failure condition
-     *   <li><strong>Be consistent:</strong> Same inputs should produce same results
+     *   <li><strong>Be quick:</strong> Avoid blocking operations; use timeouts for waits</li>
+     *   <li><strong>Be safe:</strong> Handle game state changes gracefully</li>
+     *   <li><strong>Be clear:</strong> Return {@code false} for any failure condition</li>
+     *   <li><strong>Be consistent:</strong> Same inputs should produce same results</li>
+     *   <li><strong>Be idempotent when possible:</strong> Multiple calls should be safe</li>
      * </ul>
      *
      * <h3>Common Failure Scenarios</h3>
-     *
      * <ul>
-     *   <li>Required game objects or interfaces are not available
-     *   <li>Player character cannot perform the action (e.g., insufficient items)
-     *   <li>Action times out waiting for expected game state changes
-     *   <li>Unexpected game state prevents the action from completing
+     *   <li>Required game objects or interfaces are not available</li>
+     *   <li>Player character cannot perform the action (e.g., insufficient items)</li>
+     *   <li>Action times out waiting for expected game state changes</li>
+     *   <li>Unexpected game state prevents the action from completing</li>
      * </ul>
      *
-     * <h3>Lambda Examples</h3>
+     * <h3>Lambda Implementation Example</h3>
      *
      * <pre>{@code
-     * // Simple lambda action
-     * Action eatFood = () -> Rs2Inventory.interact("Shark", "Eat");
+     * // When implementing custom actions as lambdas
+     * Action customAction = () -> {
+     *     try {
+     *         // Perform the actual game operation
+     *         boolean gameActionResult = Rs2Inventory.interact("Shark", "Eat");
      *
-     * // Lambda with custom logic
-     * Action customHealing = () -> {
-     *     if (Rs2Player.getHealthPercent() < 30) {
-     *         return Rs2Inventory.interact("Saradomin brew", "Drink");
-     *     } else {
-     *         return Rs2Inventory.interact("Shark", "Eat");
+     *         // Wait for expected result with timeout
+     *         boolean success = Rs2Player.waitForHealthIncrease(3000);
+     *
+     *         return gameActionResult && success;
+     *     } catch (Exception e) {
+     *         log.error("Action failed: {}", e.getMessage());
+     *         return false; // Always return false on exceptions
      *     }
      * };
      *
-     * // Using directly in chains
-     * when(needHealing())
-     *     .then(() -> Rs2Inventory.interact("Shark", "Eat"))
-     *     .onSuccess(() -> { System.out.println("Healed!"); return true; });
+     * // Framework will call customAction.execute() automatically
+     * when(player().getHealthPercent() < 50)
+     *     .then(customAction)
+     *     .onSuccess(log("Successfully healed"));
      * }</pre>
      *
-     * @return {@code true} if the action completed successfully, {@code false} if it failed for any
-     *     reason
+     * @return {@code true} if the action completed successfully, {@code false} if it failed for any reason
+     * @apiNote This method is part of the internal framework API. User code should rely on the fluent
+     *          API methods ({@code when().then()}) which handle execution automatically.
      */
     boolean execute();
 
