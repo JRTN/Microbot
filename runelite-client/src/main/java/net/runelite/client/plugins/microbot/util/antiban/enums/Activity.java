@@ -469,8 +469,9 @@ public enum Activity {
     ALCHING("Low/High Alching", Category.SKILLING_MAGIC, ActivityIntensity.MODERATE),
     SUPERHEATING("Superheating items", Category.SKILLING_MAGIC, ActivityIntensity.MODERATE),
     TELEPORT_TRAINING("Teleport training", Category.SKILLING_MAGIC, ActivityIntensity.MODERATE),
-    SPLASHING("Splashing spells on monsters", Category.SKILLING_MAGIC, ActivityIntensity.LOW);
-    
+    SPLASHING("Splashing spells on monsters", Category.SKILLING_MAGIC, ActivityIntensity.LOW),
+    TICK_MANIPULATION_SKILLING("Skilling with tick manipulation", Category.SKILLING, ActivityIntensity.EXTREME);
+
     @Getter
     private final String method;
     @Getter

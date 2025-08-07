@@ -68,6 +68,7 @@ package net.runelite.client.plugins.microbot.shank.api.fluent.core.flow;
  */
 @FunctionalInterface
 public interface Action {
+    Action NONE = () -> true;
     /**
      * <strong>INTERNAL USE ONLY:</strong> Executes this action and reports the result.
      *

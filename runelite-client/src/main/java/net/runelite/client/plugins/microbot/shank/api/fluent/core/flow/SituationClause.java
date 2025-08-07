@@ -196,12 +196,13 @@ public class SituationClause {
      * @throws NullPointerException if {@code actionChain} is null
      * @see #then(Action)
      */
-    public SituationResult performAll(Action actionChain) {
+    public ActionResult performAll(Action actionChain) {
         if (condition) {
             boolean successful = actionChain.execute();
-            return new SituationResult(successful, actionChain);
+            return new ActionResult(successful, actionChain);
         } else {
-            return new SituationResult(false, actionChain);
+            // Condition was false, so action was not executed
+            return new ActionResult(false, actionChain);
         }
     }
 

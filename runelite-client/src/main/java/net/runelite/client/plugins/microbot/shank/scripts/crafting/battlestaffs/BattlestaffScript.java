@@ -4,6 +4,9 @@ import static net.runelite.client.plugins.microbot.shank.api.fluent.Rs2Fluent.*;
 
 import net.runelite.api.gameval.ItemID;
 import net.runelite.client.plugins.microbot.shank.api.fluent.AbstractFluentScript;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentAntiban;
+import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
+import net.runelite.client.plugins.microbot.util.antiban.enums.ActivityIntensity;
 import net.runelite.client.plugins.microbot.util.keyboard.Rs2Keyboard;
 import net.runelite.client.plugins.microbot.util.widget.Rs2Widget;
 
@@ -19,15 +22,26 @@ public class BattlestaffScript extends AbstractFluentScript {
     }
 
     @Override
+    protected void configureAntiban(FluentAntiban.Config config) {
+        config.setActivityIntensity(ActivityIntensity.EXTREME);
+        config.setActivity(Activity.GENERAL_CRAFTING);
+        config.enablePlayStyle();
+        config.enableBehavioralVariability();
+        config.enableNonLinearIntervals();
+        config.enableRandomMouseMovement();
+        config.setMouseRandomChance(0.63);
+    }
+
+    @Override
     protected void onLoop() {
         var airOrb = ItemID.AIR_ORB;
         var battlestaff = ItemID.BATTLESTAFF;
 
         when(hasIngredients() && bank().isClosed())
-                .then(inventory().useOn(battlestaff, airOrb))
+                .then(inventory().combine(battlestaff, airOrb))
                 .then(timing().sleepUntil(this::isCraftingInterfaceOpened))
                 .then(this::craftAllBattlestaffs)
-                .then(timing().sleepUntil(() -> !hasIngredients(), pollingRate(), 30_000));
+                .then(timing().sleepUntil(() -> !hasIngredients()));
 
         when(!hasIngredients() && bank().isClosed())
                 .then(bank().open())
@@ -35,11 +49,9 @@ public class BattlestaffScript extends AbstractFluentScript {
 
         when(!hasIngredients() && bank().isOpen())
                 .then(bank().deposit().all())
-                .then(timing().sleepUntil(inventory()::isEmpty))
                 .then(bank().withdraw().x(battlestaff, 14))
-                .then(timing().sleepUntil(() -> inventory().containsItem(battlestaff)))
                 .then(bank().withdraw().x(airOrb, 14))
-                .then(timing().sleepUntil(() -> inventory().containsItem(airOrb)));
+                .then(timing().sleepUntil(this::hasIngredients, pollingRate(), 3000));
 
         when(hasIngredients() && bank().isOpen())
                 .then(bank().close());
@@ -63,7 +75,7 @@ public class BattlestaffScript extends AbstractFluentScript {
     }
 
     @Override
-    protected long pollingRate() {
+    protected int pollingRate() {
         return 60;
     }
 }

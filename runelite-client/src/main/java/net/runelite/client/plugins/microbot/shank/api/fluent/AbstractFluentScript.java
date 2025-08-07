@@ -22,7 +22,7 @@ public abstract class AbstractFluentScript extends Script {
             when(!super.run()).throwException("Script failed to initialize");
 
             initialize();
-            configureAntiban();
+            antiban().configure(this::configureAntiban);
             schedule();
         } catch (Exception ex) {
             log.error("Cannot start script: {}", ex.getMessage(), ex);
@@ -34,36 +34,23 @@ public abstract class AbstractFluentScript extends Script {
 
     protected boolean initialize() {
         when(!Microbot.isLoggedIn()).throwException("Player is not logged in");
-
         return true;
     }
 
     protected boolean schedule() {
         mainScheduledFuture =
                 scheduledExecutorService.scheduleWithFixedDelay(
-                        this::onLoop, 0, pollingRate(), TimeUnit.MILLISECONDS);
+                        this::_onLoop, 0, 5, TimeUnit.MILLISECONDS);
 
         return true;
     }
 
-    protected boolean configureAntiban() {
-        antiban()
-                .configure(
-                        config -> {
-                            config.setActivityIntensity(ActivityIntensity.HIGH);
-                            config.setActivity(Activity.fromSkill(Skill.CRAFTING));
-
-                            config.setActionCooldownChance(0.85);
-                            config.setMicroBreakChance(0);
-                            config.setMicroBreakDurationMax(1);
-                            config.setMicroBreakDurationMin(1);
-                            config.setMouseRandomChance(0.75);
-                            config.setMouseOffScreenChance(0.00);
-                        });
-
-        return true;
+    private void _onLoop() {
+        onLoop();
+        sleep(pollingRate());
     }
 
+    protected abstract void configureAntiban(FluentAntiban.Config config);
     protected abstract void onLoop();
-    protected abstract long pollingRate();
+    protected abstract int pollingRate();
 }

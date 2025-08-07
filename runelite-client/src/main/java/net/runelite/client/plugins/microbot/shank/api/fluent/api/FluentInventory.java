@@ -1,7 +1,6 @@
 package net.runelite.client.plugins.microbot.shank.api.fluent.api;
 
 import net.runelite.api.GameObject;
-import net.runelite.api.ItemContainer;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.general.FluentItemStore;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.Action;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2ItemModel;
@@ -485,11 +484,11 @@ public interface FluentInventory extends FluentItemStore {
      * @param first The predicate to match the first item (the one being used)
      * @param second The predicate to match the second item (the target)
      * @return An Action that uses the first item on the second item
-     * @see #useOn(int, int)
-     * @see #useOn(String, String)
+     * @see #combine(int, int)
+     * @see #combine(String, String)
      * @see Rs2ItemModel
      */
-    Action useOn(Predicate<Rs2ItemModel> first, Predicate<Rs2ItemModel> second);
+    Action combine(Predicate<Rs2ItemModel> first, Predicate<Rs2ItemModel> second);
 
     /**
      * Creates an action to use one item on another item in the inventory by their IDs.
@@ -515,11 +514,11 @@ public interface FluentInventory extends FluentItemStore {
      * @param first The ID of the first item (the one being used)
      * @param second The ID of the second item (the target)
      * @return An Action that uses the first item on the second item
-     * @see #useOn(String, String)
-     * @see #useOn(Predicate, Predicate)
+     * @see #combine(String, String)
+     * @see #combine(Predicate, Predicate)
      * @see Rs2ItemModel#getId()
      */
-    Action useOn(int first, int second);
+    Action combine(int first, int second);
 
     /**
      * Creates an action to use one item on another item in the inventory by their names.
@@ -545,11 +544,11 @@ public interface FluentInventory extends FluentItemStore {
      * @param first The exact name of the first item (the one being used)
      * @param second The exact name of the second item (the target)
      * @return An Action that uses the first item on the second item
-     * @see #useOn(int, int)
-     * @see #useOn(Predicate, Predicate)
+     * @see #combine(int, int)
+     * @see #combine(Predicate, Predicate)
      * @see Rs2ItemModel#getName()
      */
-    Action useOn(String first, String second);
+    Action combine(String first, String second);
 
     /**
      * Creates an action to use an inventory item on a game object in the world.

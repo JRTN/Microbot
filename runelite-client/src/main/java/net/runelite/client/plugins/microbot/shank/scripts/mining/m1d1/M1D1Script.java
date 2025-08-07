@@ -10,6 +10,7 @@ import net.runelite.api.Skill;
 import net.runelite.api.TileObject;
 import net.runelite.client.plugins.microbot.Microbot;
 import net.runelite.client.plugins.microbot.shank.api.fluent.AbstractFluentScript;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentAntiban;
 import net.runelite.client.plugins.microbot.util.combat.Rs2Combat;
 import net.runelite.client.plugins.microbot.util.gameobject.Rs2GameObject;
 import net.runelite.client.plugins.microbot.util.inventory.Rs2Inventory;
@@ -32,6 +33,11 @@ public class M1D1Script extends AbstractFluentScript {
     @Inject
     public M1D1Script(M1D1Config config) {
         this.config = config;
+    }
+
+    @Override
+    protected void configureAntiban(FluentAntiban.Config config) {
+
     }
 
     @Override
@@ -59,7 +65,7 @@ public class M1D1Script extends AbstractFluentScript {
     }
 
     @Override
-    protected long pollingRate() {
+    protected int pollingRate() {
         return 75;
     }
 
