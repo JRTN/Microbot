@@ -36,7 +36,7 @@ public class ThreeTickBarbarianScript extends AbstractFluentScript {
 
     @Override
     protected void configureAntiban(FluentAntiban.Config config) {
-        config.setActivity(Activity.TICK_MANIPULATION_SKILLING);
+        config.setActivity(Activity.HIGH_INTENSITY_SKILLING);
         config.setActivityIntensity(ActivityIntensity.EXTREME);
 
         config.enablePlayStyle();

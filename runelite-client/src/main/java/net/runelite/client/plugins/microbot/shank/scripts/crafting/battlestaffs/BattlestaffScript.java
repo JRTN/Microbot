@@ -34,7 +34,7 @@ public class BattlestaffScript extends AbstractFluentScript {
         config.setMouseRandomChance(0.63);
 
         config.setActivityIntensity(ActivityIntensity.CUSTOM);
-        config.setActivity(Activity.TICK_MANIPULATION_SKILLING);
+        config.setActivity(Activity.HIGH_INTENSITY_SKILLING);
     }
 
     @Override
@@ -42,28 +42,35 @@ public class BattlestaffScript extends AbstractFluentScript {
         var airOrb = ItemID.AIR_ORB;
         var battlestaff = ItemID.BATTLESTAFF;
 
-        when(hasIngredients() && bank().isClosed())
-                .then(inventory().combine(battlestaff, airOrb))
-                .then(timing().sleepUntil(this::isCraftingInterfaceOpened))
-                .then(this::craftAllBattlestaffs)
-                .then(timing().sleep(100, 20))
-                .then(antiban().moveMouseOffScreen())
-                .then(timing()
-                        .sleepUntil(() -> !hasIngredients()));
-
-        when(!hasIngredients() && bank().isClosed())
-                .then(bank().open())
-                .then(timing().sleepUntil(bank()::isOpen));
-
-        when(!hasIngredients() && bank().isOpen())
+        when(needToBank()
+                && bank().isOpen())
                 .then(bank().deposit().all())
                 .then(bank().withdraw().x(battlestaff, 14))
                 .then(bank().withdraw().x(airOrb, 14))
                 .then(bank().close())
-                .then(timing().sleepUntil(this::hasIngredients, pollingRate(), 3000));
+                .then(timing().sleepUntil(this::haveNecessaryMaterials, pollingRate(), 3000));
+
+        when(!needToBank()
+                && bank().isClosed())
+                .then(inventory().combine(battlestaff, airOrb))
+                .then(timing().sleepUntil(this::isCraftingInterfaceOpened))
+                .then(this::craftAllBattlestaffs)
+                .then(timing().sleep(300, 20))
+                .then(antiban().moveMouseRandomly())
+                .then(antiban().moveMouseOffScreen())
+                .then(timing().sleepUntil(this::needToBank));
+
+        when(needToBank()
+                && bank().isClosed())
+                .then(bank().open())
+                .then(timing().sleepUntil(bank()::isOpen));
     }
 
-    private boolean hasIngredients() {
+    private boolean needToBank() {
+        return !haveNecessaryMaterials();
+    }
+
+    private boolean haveNecessaryMaterials() {
         var airOrb = ItemID.AIR_ORB;
         var battlestaff = ItemID.BATTLESTAFF;
 
