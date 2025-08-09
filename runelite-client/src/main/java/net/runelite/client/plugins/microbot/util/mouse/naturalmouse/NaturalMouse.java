@@ -88,24 +88,28 @@ public class NaturalMouse {
     }
 
     public MouseMotionFactory getFactory() {
-        if (Rs2Antiban.getActivityIntensity() == ActivityIntensity.VERY_LOW) {
-            log.debug("Creating average computer user motion factory");
-            return FactoryTemplates.createAverageComputerUserMotionFactory(nature);
-        } else if (Rs2Antiban.getActivityIntensity() == ActivityIntensity.LOW) {
-            log.debug("Creating normal gamer motion factory");
-            return FactoryTemplates.createNormalGamerMotionFactory(nature);
-        } else if (Rs2Antiban.getActivityIntensity() == ActivityIntensity.MODERATE) {
-            log.debug("Creating fast gamer motion factory");
-            return FactoryTemplates.createFastGamerMotionFactory(nature);
-        } else if (Rs2Antiban.getActivityIntensity() == ActivityIntensity.HIGH) {
-            log.debug("Creating fast gamer motion factory");
-            return FactoryTemplates.createFastGamerMotionFactory(nature);
-        } else if (Rs2Antiban.getActivityIntensity() == ActivityIntensity.EXTREME) {
-            log.debug("Creating super fast gamer motion factory");
-            return FactoryTemplates.createSuperFastGamerMotionFactory(nature);
-        } else {
-            log.debug("Default: Creating super fast gamer motion factory");
-            return FactoryTemplates.createSuperFastGamerMotionFactory(nature);
+        switch (Rs2Antiban.getActivityIntensity()) {
+            case VERY_LOW:
+                log.debug("Creating average computer user motion factory");
+                return FactoryTemplates.createAverageComputerUserMotionFactory(nature);
+            case LOW:
+                log.debug("Creating normal gamer motion factory");
+                return FactoryTemplates.createNormalGamerMotionFactory(nature);
+            case MODERATE:
+                log.debug("Creating moderate gamer motion factory");
+                return FactoryTemplates.createFastGamerMotionFactory(nature);
+            case HIGH:
+                log.debug("Creating fast gamer motion factory");
+                return FactoryTemplates.createFastGamerMotionFactory(nature);
+            case EXTREME:
+                log.debug("Creating super fast gamer motion factory");
+                return FactoryTemplates.createSuperFastGamerMotionFactory(nature);
+            case ROBOT:
+                log.debug("Creating ");
+                return FactoryTemplates.createDemoRobotMotionFactory(25);
+            default:
+                log.debug("Default: Creating super fast gamer motion factory");
+                return FactoryTemplates.createSuperFastGamerMotionFactory(nature);
         }
 
 //		var factory = new MouseMotionFactory();

@@ -140,20 +140,26 @@ public class TickManipulationActionImpl implements TickManipulationAction {
 
     private boolean executeOneCycle() {
         log.debug("Starting tick manipulation cycle");
-
+        long startTime = System.currentTimeMillis();
         // Before action
         if (!beforeAction.execute()) {
             log.warn("Before action failed, aborting cycle");
             return false;
         }
-        log.debug("Before action completed successfully");
+        long beforeEndTime = System.currentTimeMillis() - startTime;
+        log.debug("Before action completed successfully in {}ms", beforeEndTime);
+
+        long beforeSleepTime = TimingUtils.randomJitter(600, 10).getAsLong();
+        log.debug("Sleeping for {}ms before executing main action", beforeSleepTime);
+        TimingUtils.sleep(beforeSleepTime);
 
         // Main action
         if (!mainAction.execute()) {
             log.warn("Main action failed, aborting cycle");
             return false;
         }
-        log.debug("Main action completed successfully");
+        long mainEndTime = System.currentTimeMillis() - startTime - beforeEndTime;
+        log.debug("Main action completed successfully in {}ms", mainEndTime);
 
         // Wait for completion
         long timeout = timeoutSupplier.getAsLong();
@@ -164,8 +170,9 @@ public class TickManipulationActionImpl implements TickManipulationAction {
                 timeout
         );
 
+        long completeEndTime = System.currentTimeMillis() - startTime - beforeEndTime - mainEndTime;
         if (conditionMet) {
-            log.debug("Completion condition met");
+            log.debug("Completion condition met in {}ms", completeEndTime);
         } else {
             log.debug("Completion condition timed out after {}ms", timeout);
         }
@@ -175,9 +182,14 @@ public class TickManipulationActionImpl implements TickManipulationAction {
             log.warn("After action failed, aborting cycle");
             return false;
         }
-        log.debug("After action completed successfully");
+        long afterEndTime = System.currentTimeMillis() - startTime - beforeEndTime - mainEndTime - completeEndTime;
+        log.debug("After action completed successfully in {}ms", afterEndTime);
+        long afterSleepTime = TimingUtils.randomJitter(50, 10).getAsLong();
+        log.debug("Sleeping for {}ms before executing main action", afterSleepTime);
+        TimingUtils.sleep(afterEndTime);
 
         log.debug("Tick manipulation cycle completed successfully");
+
         return true;
     }
 }

@@ -2,9 +2,11 @@ package net.runelite.client.plugins.microbot.shank.api.fluent;
 
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.*;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.FluentCombat;
+import net.runelite.client.plugins.microbot.shank.api.fluent.api.general.TickManipulationAction;
 import net.runelite.client.plugins.microbot.shank.api.fluent.api.sleep.FluentTiming;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.*;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.combat.FluentSpecialAttackImpl;
+import net.runelite.client.plugins.microbot.shank.api.fluent.impl.general.TickManipulationActionImpl;
 import net.runelite.client.plugins.microbot.shank.api.fluent.impl.sleep.FluentTimingImpl;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.SituationClause;
 import net.runelite.client.plugins.microbot.shank.api.fluent.core.flow.SituationResult;
@@ -142,6 +144,10 @@ public interface Rs2Fluent {
 
     static FluentPlayer player() {
         return new FluentPlayerImpl();
+    }
+
+    static TickManipulationAction tickManipulation() {
+        return new TickManipulationActionImpl();
     }
 
     static FluentTiming timing() {

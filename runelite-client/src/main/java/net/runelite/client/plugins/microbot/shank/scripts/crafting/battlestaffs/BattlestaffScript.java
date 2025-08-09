@@ -23,10 +23,11 @@ public class BattlestaffScript extends AbstractFluentScript {
 
     @Override
     protected void configureAntiban(FluentAntiban.Config config) {
-        config.setActivityIntensity(ActivityIntensity.EXTREME);
+        config.setActivityIntensity(ActivityIntensity.ROBOT);
         config.setActivity(Activity.GENERAL_CRAFTING);
+
+        config.enableNaturalMouse();
         config.enablePlayStyle();
-        config.enableBehavioralVariability();
         config.enableNonLinearIntervals();
         config.enableRandomMouseMovement();
         config.setMouseRandomChance(0.63);

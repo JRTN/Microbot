@@ -40,7 +40,7 @@ public class ThreeTickBarbarianScript extends AbstractFluentScript {
         config.setActivityIntensity(ActivityIntensity.EXTREME);
 
         config.enablePlayStyle();
-        config.enableNaturalMouse();
+        config.disableNaturalMouse();
 
         config.enableNonLinearIntervals();
         config.enableRandomMouseMovement();
@@ -51,17 +51,20 @@ public class ThreeTickBarbarianScript extends AbstractFluentScript {
 
     @Override
     protected void onLoop() {
-        if (hasLeapingFish()) {
-            inventory().drop(this::leapingFish).execute();
-            doTickFishing().execute();
-        } else {
-            doTickFishing().execute();
-        }
+        when(true)
+                .then(tickManipulation()
+                        .action(fishAtSpot())
+                        .waitUntil(this::hasLeapingFish)
+                        .timeout(650)
+                        .before(inventory()
+                                .combine(GUAM_LEAF, SWAMP_TAR))
+                        .repeating()
+                ).then(inventory().drop(this::leapingFish));
     }
 
     @Override
     protected int pollingRate() {
-        return 615;
+        return 60;
     }
 
     private long tickActionTimeout() {
