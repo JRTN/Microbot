@@ -59,7 +59,8 @@ public enum ActivityIntensity {
     MODERATE("Moderate", 0.3, 1.2, PlayStyle.AGGRESSIVE),
     HIGH("High", 0.2, 1.1, PlayStyle.EXTREME_AGGRESSIVE),
     EXTREME("Extreme", 0.1, 1.0, PlayStyle.EXTREME_AGGRESSIVE),
-    ROBOT("Robot", 0.05, 0.8, PlayStyle.EXTREME_AGGRESSIVE);
+    ROBOT("Robot", 0.05, 0.8, PlayStyle.EXTREME_AGGRESSIVE),
+    CUSTOM("Custom", 0.025, 0.7, PlayStyle.SUPER_MEGA_AGGRESSIVE)
     ;
 
     @Getter

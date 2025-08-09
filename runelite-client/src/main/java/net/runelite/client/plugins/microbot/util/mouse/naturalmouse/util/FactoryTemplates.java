@@ -3,8 +3,7 @@ package net.runelite.client.plugins.microbot.util.mouse.naturalmouse.util;
 
 import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
 import net.runelite.client.plugins.microbot.util.antiban.Rs2AntibanSettings;
-import net.runelite.client.plugins.microbot.util.mouse.naturalmouse.api.MouseMotionFactory;
-import net.runelite.client.plugins.microbot.util.mouse.naturalmouse.api.SpeedManager;
+import net.runelite.client.plugins.microbot.util.mouse.naturalmouse.api.*;
 import net.runelite.client.plugins.microbot.util.mouse.naturalmouse.support.*;
 
 import java.util.ArrayList;
@@ -91,6 +90,27 @@ public class FactoryTemplates {
 
         DefaultOvershootManager overshootManager = (DefaultOvershootManager) factory.getOvershootManager();
         overshootManager.setOvershoots(0);
+
+        factory.setSpeedManager(manager);
+        return factory;
+    }
+
+    public static MouseMotionFactory createCustomMouseMotionFactory(
+            MouseMotionNature nature,
+            DeviationProvider deviationProvider,
+            NoiseProvider noiseProvider,
+            long motionTimeMsPer100Pixels,
+            int overshoots
+    ) {
+        MouseMotionFactory factory = new MouseMotionFactory(nature);
+        final Flow flow = new Flow(FlowTemplates.constantSpeed());
+        double timePerPixel = motionTimeMsPer100Pixels / 100d;
+        SpeedManager manager = distance -> new Pair<>(flow, (long) (timePerPixel * distance));
+        factory.setDeviationProvider(deviationProvider);
+        factory.setNoiseProvider(noiseProvider);
+
+        DefaultOvershootManager overshootManager = (DefaultOvershootManager) factory.getOvershootManager();
+        overshootManager.setOvershoots(overshoots);
 
         factory.setSpeedManager(manager);
         return factory;

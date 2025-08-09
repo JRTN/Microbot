@@ -23,14 +23,18 @@ public class BattlestaffScript extends AbstractFluentScript {
 
     @Override
     protected void configureAntiban(FluentAntiban.Config config) {
-        config.setActivityIntensity(ActivityIntensity.ROBOT);
-        config.setActivity(Activity.GENERAL_CRAFTING);
+        config.resetSettings();
 
+        config.enable();
         config.enableNaturalMouse();
         config.enablePlayStyle();
         config.enableNonLinearIntervals();
         config.enableRandomMouseMovement();
+
         config.setMouseRandomChance(0.63);
+
+        config.setActivityIntensity(ActivityIntensity.CUSTOM);
+        config.setActivity(Activity.TICK_MANIPULATION_SKILLING);
     }
 
     @Override
@@ -42,7 +46,10 @@ public class BattlestaffScript extends AbstractFluentScript {
                 .then(inventory().combine(battlestaff, airOrb))
                 .then(timing().sleepUntil(this::isCraftingInterfaceOpened))
                 .then(this::craftAllBattlestaffs)
-                .then(timing().sleepUntil(() -> !hasIngredients()));
+                .then(timing().sleep(100, 20))
+                .then(antiban().moveMouseOffScreen())
+                .then(timing()
+                        .sleepUntil(() -> !hasIngredients()));
 
         when(!hasIngredients() && bank().isClosed())
                 .then(bank().open())
@@ -52,10 +59,8 @@ public class BattlestaffScript extends AbstractFluentScript {
                 .then(bank().deposit().all())
                 .then(bank().withdraw().x(battlestaff, 14))
                 .then(bank().withdraw().x(airOrb, 14))
+                .then(bank().close())
                 .then(timing().sleepUntil(this::hasIngredients, pollingRate(), 3000));
-
-        when(hasIngredients() && bank().isOpen())
-                .then(bank().close());
     }
 
     private boolean hasIngredients() {

@@ -59,6 +59,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 public enum PlayStyle {
+    SUPER_MEGA_AGGRESSIVE("Crazy Aggressive", 1, 2, 1, 0.00),
     EXTREME_AGGRESSIVE("Extreme Aggressive", 1, 3, 2, 0.00), // Almost no break between inputs
     AGGRESSIVE("Aggressive", 2, 5, 5, 0.01),                // Very short breaks
     MODERATE("Moderate", 3, 9, 10, 0.08),                    // Short breaks

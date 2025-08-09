@@ -105,8 +105,17 @@ public class NaturalMouse {
                 log.debug("Creating super fast gamer motion factory");
                 return FactoryTemplates.createSuperFastGamerMotionFactory(nature);
             case ROBOT:
-                log.debug("Creating ");
-                return FactoryTemplates.createDemoRobotMotionFactory(25);
+                log.debug("Creating robot motion factory");
+                return FactoryTemplates.createDemoRobotMotionFactory(17);
+            case CUSTOM:
+                log.debug("Creating custom motion factory");
+                return FactoryTemplates.createCustomMouseMotionFactory(
+                        nature,
+                        nature.getDeviationProvider(),
+                        nature.getNoiseProvider(),
+                        15,
+                        1
+                );
             default:
                 log.debug("Default: Creating super fast gamer motion factory");
                 return FactoryTemplates.createSuperFastGamerMotionFactory(nature);
