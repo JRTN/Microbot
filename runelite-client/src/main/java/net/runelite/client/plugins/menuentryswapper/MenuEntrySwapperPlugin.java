@@ -702,6 +702,41 @@ public class MenuEntrySwapperPlugin extends Plugin
 		};
 	}
 
+    private boolean swapBlackjacking(Menu menu, MenuEntry[] menuEntries, int index, MenuEntry menuEntry)
+    {
+        if (!config.swapBlackjacking())
+        {
+            return false;
+        }
+
+        final NPC npc = menuEntry.getNpc();
+        if (npc == null)
+        {
+            return false;
+        }
+
+        final NPCComposition composition = npc.getTransformedComposition();
+        if (composition == null || !composition.getName().equalsIgnoreCase("menaphite thug"))
+        {
+            return false;
+        }
+
+        final int animation = npc.getAnimation();
+        final boolean canBeKnockedOut = animation == 808 || animation == -1;
+
+        final String targetOption = canBeKnockedOut ? "knock-out" : "pickpocket";
+        final String currentOption = Text.removeTags(menuEntry.getOption()).toLowerCase();
+
+        // If current option is already the target, move it to top
+        if (currentOption.equals(targetOption))
+        {
+            swap(menu, menuEntries, index, menuEntries.length - 1);
+            return true;
+        }
+
+        return false;
+    }
+
 	private void configureNpcClick(MenuOpened event)
 	{
 		if (!shiftModifier() || !config.npcCustomization())
@@ -1559,6 +1594,12 @@ public class MenuEntrySwapperPlugin extends Plugin
 
 		if (NPC_MENU_TYPES.contains(menuAction))
 		{
+            // ADD BLACKJACKING LOGIC HERE - before existing NPC swap logic
+            if (swapBlackjacking(menu, menuEntries, index, menuEntry))
+            {
+                return;
+            }
+
 			final NPC npc = menuEntry.getNpc();
 			if (npc == null) return;
 			assert npc != null;

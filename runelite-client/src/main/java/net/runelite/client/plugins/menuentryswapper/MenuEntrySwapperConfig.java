@@ -215,6 +215,17 @@ public interface MenuEntrySwapperConfig extends Config
 		return true;
 	}
 
+    @ConfigItem(
+            keyName = "swapBlackjacking",
+            name = "Blackjacking",
+            description = "Swap Menaphite thug options based on animation state",
+            section = npcSection
+    )
+    default boolean swapBlackjacking()
+    {
+        return false;
+    }
+
 	@ConfigItem(
 		keyName = "swapBanker",
 		name = "Bank",
